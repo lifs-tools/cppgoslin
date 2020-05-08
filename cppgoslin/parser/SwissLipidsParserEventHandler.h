@@ -55,6 +55,12 @@ public:
     bool use_head_group;
     int db_position;
     string db_cistrans;
+    
+    const map<string, void(SwissLipidsParserEventHandler::*)(TreeNode *)> number_functions = {
+        {"db_single_position", &SwissLipidsParserEventHandler::add_db_position_number},
+        {"db", &SwissLipidsParserEventHandler::add_double_bonds},
+        {"fa_core", &SwissLipidsParserEventHandler::add_carbon},
+        {"lcb_core", &SwissLipidsParserEventHandler::add_carbon}};
         
     SwissLipidsParserEventHandler();
     ~SwissLipidsParserEventHandler();
@@ -73,6 +79,7 @@ public:
     void add_double_bonds(TreeNode *node);
     void add_carbon(TreeNode *node);
     void mediator_event(TreeNode* node);
+    void handle_number(TreeNode* node);
     
     void set_isomeric_level(TreeNode* node);
     void add_db_position(TreeNode* node);

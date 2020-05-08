@@ -54,7 +54,7 @@ SwissLipidsParserEventHandler::SwissLipidsParserEventHandler() : BaseParserEvent
     reg("fa4_unsorted_pre_event", set_molecular_level);
     reg("db_single_position_pre_event", set_isomeric_level);
     reg("db_single_position_post_event", add_db_position);
-    reg("db_position_number_pre_event", add_db_position_number);
+    //reg("db_position_number_pre_event", add_db_position_number);
     reg("cistrans_pre_event", add_cistrans);
     reg("lcb_pre_event", new_lcb);
     reg("lcb_post_event", clean_lcb);
@@ -62,8 +62,9 @@ SwissLipidsParserEventHandler::SwissLipidsParserEventHandler() : BaseParserEvent
     reg("fa_post_event", append_fa);
     reg("ether_pre_event", add_ether);
     reg("hydroxyl_pre_event", add_hydroxyl);
-    reg("db_count_pre_event", add_double_bonds);
-    reg("carbon_pre_event", add_carbon);
+    //reg("db_count_pre_event", add_double_bonds);
+    //reg("carbon_pre_event", add_carbon);
+    reg("number_pre_event", handle_number);
     
 }
 
@@ -96,6 +97,15 @@ void SwissLipidsParserEventHandler::set_isomeric_level(TreeNode* node){
 void SwissLipidsParserEventHandler::add_db_position(TreeNode* node){
     if (current_fa != NULL){
         current_fa->double_bond_positions.insert({db_position, db_cistrans});
+    }
+}
+
+
+void SwissLipidsParserEventHandler::handle_number(TreeNode* node){
+    string rule = domain.at(domain.size() - 2);
+    
+    if (number_functions.find(rule) != number_functions.end()){
+        (*this.*(number_functions.at(rule)))(node);
     }
 }
 
