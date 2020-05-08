@@ -55,6 +55,13 @@ public:
     Adduct *adduct;
     int db_position;
     string db_cistrans;
+    
+    const map<string, void(GoslinParserEventHandler::*)(TreeNode *)> number_functions = {
+        {"db_single_position", &GoslinParserEventHandler::add_db_position_number},
+        {"db", &GoslinParserEventHandler::add_double_bonds},
+        {"fa_pure", &GoslinParserEventHandler::add_carbon},
+        {"lcb_pure", &GoslinParserEventHandler::add_carbon},
+        {"hydroxyl", &GoslinParserEventHandler::add_hydroxyl}};
         
     GoslinParserEventHandler();
     ~GoslinParserEventHandler();
@@ -76,6 +83,7 @@ public:
     void add_adduct(TreeNode *node);
     void add_charge(TreeNode *node);
     void add_charge_sign(TreeNode *node);
+    void handle_number(TreeNode *node);
     
     void set_isomeric_level(TreeNode* node);
     void add_db_position(TreeNode* node);

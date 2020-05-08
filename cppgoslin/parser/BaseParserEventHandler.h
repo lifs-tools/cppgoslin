@@ -50,6 +50,7 @@ public:
     set<string> rule_names;
     T content;
     string parse_string;
+    vector<string> domain;
     
     BaseParserEventHandler();
     virtual ~BaseParserEventHandler();

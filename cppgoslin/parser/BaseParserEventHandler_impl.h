@@ -60,6 +60,16 @@ void BaseParserEventHandler<T>::sanity_check(){
 
 template <class T> 
 void BaseParserEventHandler<T>::handle_event(string event_name, TreeNode *node){
+    if (endswith(event_name, "_pre_event")){
+        domain.push_back(replace_all(event_name, "_pre_event", ""));
+    }
+    else if (endswith(event_name, "_post_event")){
+        string rule_name = replace_all(event_name, "_post_event", "");
+        if (domain.back() != rule_name){
+            throw RuntimeException("Internal error in parser event handler");
+        }
+        domain.pop_back();
+    }
     if (registered_events->find(event_name) != registered_events->end()){
         registered_events->at(event_name)(node);
     }

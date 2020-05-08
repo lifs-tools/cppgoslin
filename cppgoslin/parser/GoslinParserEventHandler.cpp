@@ -71,15 +71,17 @@ GoslinParserEventHandler::GoslinParserEventHandler() : BaseParserEventHandler<Li
     
     reg("db_single_position_pre_event", set_isomeric_level);
     reg("db_single_position_post_event", add_db_position);
-    reg("db_position_number_pre_event", add_db_position_number);
+    //reg("db_position_number_pre_event", add_db_position_number);
     reg("cistrans_pre_event", add_cistrans);
     
     
     reg("ether_pre_event", add_ether);
     reg("old_hydroxyl_pre_event", add_old_hydroxyl);
-    reg("db_count_pre_event", add_double_bonds);
-    reg("carbon_pre_event", add_carbon);
-    reg("hydroxyl_pre_event", add_hydroxyl);
+    //reg("db_count_pre_event", add_double_bonds);
+    //reg("carbon_pre_event", add_carbon);
+    //reg("hydroxyl_pre_event", add_hydroxyl);
+    
+    reg("number_pre_event", handle_number);
     
     
     reg("adduct_info_pre_event", new_adduct);
@@ -199,6 +201,16 @@ void GoslinParserEventHandler::append_fa(TreeNode *node) {
 
     fa_list->push_back(current_fa);
     current_fa = NULL;
+}
+
+
+
+void GoslinParserEventHandler::handle_number(TreeNode* node){
+    string rule = domain.at(domain.size() - 2);
+    
+    if (number_functions.find(rule) != number_functions.end()){
+        (*this.*(number_functions.at(rule)))(node);
+    }
 }
     
     
