@@ -72,14 +72,15 @@ LipidMapsParserEventHandler::LipidMapsParserEventHandler() : BaseParserEventHand
     
     reg("db_single_position_pre_event", set_isomeric_level);
     reg("db_single_position_post_event", add_db_position);
-    reg("db_position_number_pre_event", add_db_position_number);
+    //reg("db_position_number_pre_event", add_db_position_number);
     reg("cistrans_pre_event", add_cistrans);
     
     reg("ether_pre_event", add_ether);
-    reg("hydroxyl_pre_event", add_hydroxyl);
+    //reg("hydroxyl_pre_event", add_hydroxyl);
     reg("hydroxyl_lcb_pre_event", add_hydroxyl_lcb);
-    reg("db_count_pre_event", add_double_bonds);
-    reg("carbon_pre_event", add_carbon);
+    //reg("db_count_pre_event", add_double_bonds);
+    //reg("carbon_pre_event", add_carbon);
+    reg("number_pre_event", handle_number);
     
     reg("mod_text_pre_event", increment_hydroxyl);
 } 
@@ -87,6 +88,16 @@ LipidMapsParserEventHandler::LipidMapsParserEventHandler() : BaseParserEventHand
 
 LipidMapsParserEventHandler::~LipidMapsParserEventHandler(){
     delete fa_list;
+}
+
+
+
+void LipidMapsParserEventHandler::handle_number(TreeNode* node){
+    string rule = domain.at(domain.size() - 2);
+    
+    if (number_functions.find(rule) != number_functions.end()){
+        (*this.*(number_functions.at(rule)))(node);
+    }
 }
     
     

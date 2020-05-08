@@ -55,6 +55,13 @@ public:
     bool use_head_group;
     int db_position;
     string db_cistrans;
+    
+    const map<string, void(HmdbParserEventHandler::*)(TreeNode *)> number_functions = {
+        {"db_single_position", &HmdbParserEventHandler::add_db_position_number},
+        {"hydroxyl", &HmdbParserEventHandler::add_hydroxyl},
+        {"db", &HmdbParserEventHandler::add_double_bonds},
+        {"fa_core", &HmdbParserEventHandler::add_carbon},
+        {"lcb_core", &HmdbParserEventHandler::add_carbon}};
         
     HmdbParserEventHandler();
     ~HmdbParserEventHandler();
@@ -78,6 +85,7 @@ public:
     void add_db_position(TreeNode* node);
     void add_db_position_number(TreeNode* node);
     void add_cistrans(TreeNode* node);
+    void handle_number(TreeNode* node);
     
     void furan_fa(TreeNode *node);
     void interlink_fa(TreeNode *node);

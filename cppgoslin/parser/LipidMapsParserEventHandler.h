@@ -58,6 +58,13 @@ public:
     bool use_head_group;
     int db_position;
     string db_cistrans;
+    
+    const map<string, void(LipidMapsParserEventHandler::*)(TreeNode *)> number_functions = {
+        {"db_single_position", &LipidMapsParserEventHandler::add_db_position_number},
+        {"hydroxyl", &LipidMapsParserEventHandler::add_hydroxyl},
+        {"db", &LipidMapsParserEventHandler::add_double_bonds},
+        {"fa_pure", &LipidMapsParserEventHandler::add_carbon},
+        {"lcb_fa_unmod", &LipidMapsParserEventHandler::add_carbon}};
 
     LipidMapsParserEventHandler();
     ~LipidMapsParserEventHandler();
@@ -78,6 +85,7 @@ public:
     void build_lipid(TreeNode* node);
     void add_hydroxyl_lcb(TreeNode* node);
     void pure_fa(TreeNode* node);
+    void handle_number(TreeNode* node);
     
     void set_isomeric_level(TreeNode* node);
     void add_db_position(TreeNode* node);
