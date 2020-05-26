@@ -29,7 +29,7 @@ SOFTWARE.
 #define reg(x, y) BaseParserEventHandler<LipidAdduct*>::registered_events->insert({x, bind(&HmdbParserEventHandler::y, this, placeholders::_1)})
     
 
-HmdbParserEventHandler::HmdbParserEventHandler() : BaseParserEventHandler<LipidAdduct*>() {
+HmdbParserEventHandler::HmdbParserEventHandler() : AdductInfoParserEventHandler() {
     fa_list = new vector<FattyAcid*>();
     
     reg("lipid_pre_event", reset_lipid);
@@ -81,6 +81,7 @@ void HmdbParserEventHandler::reset_lipid(TreeNode *node) {
     head_group = "";
     lcb = NULL;
     fa_list->clear();
+    adduct = NULL;
     current_fa = NULL;
     use_head_group = false;
     db_position = 0;
@@ -240,6 +241,7 @@ void HmdbParserEventHandler::build_lipid(TreeNode *node) {
     ls->use_head_group = use_head_group;
     lipid = new LipidAdduct();
     lipid->lipid = ls;
+    lipid->adduct = adduct;
     BaseParserEventHandler<LipidAdduct*>::content = lipid;
 }
     

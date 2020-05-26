@@ -33,7 +33,7 @@ SOFTWARE.
 #include "cppgoslin/domain/LipidStructuralSubspecies.h"
 #include "cppgoslin/domain/LipidIsomericSubspecies.h"
 #include "cppgoslin/domain/FattyAcid.h"
-#include "cppgoslin/parser/BaseParserEventHandler.h"
+#include "cppgoslin/parser/AdductInfoParserEventHandler.h"
 #include <string>
 #include <set>
 #include <map>
@@ -44,7 +44,7 @@ SOFTWARE.
 using namespace std;
 using namespace goslin;
 
-class HmdbParserEventHandler : public BaseParserEventHandler<LipidAdduct*> {
+class HmdbParserEventHandler : public AdductInfoParserEventHandler {
 public:
     LipidLevel level;
     LipidAdduct *lipid;

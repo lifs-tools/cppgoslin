@@ -29,7 +29,7 @@ SOFTWARE.
 #define reg(x, y) BaseParserEventHandler<LipidAdduct*>::registered_events->insert({x, bind(&LipidMapsParserEventHandler::y, this, placeholders::_1)})
     
 
-LipidMapsParserEventHandler::LipidMapsParserEventHandler() : BaseParserEventHandler<LipidAdduct*>() {
+LipidMapsParserEventHandler::LipidMapsParserEventHandler() : AdductInfoParserEventHandler() {
     fa_list = new vector<FattyAcid*>();
         
     reg("lipid_pre_event", reset_lipid);
@@ -74,14 +74,10 @@ LipidMapsParserEventHandler::LipidMapsParserEventHandler() : BaseParserEventHand
     
     reg("db_single_position_pre_event", set_isomeric_level);
     reg("db_single_position_post_event", add_db_position);
-    //reg("db_position_number_pre_event", add_db_position_number);
     reg("cistrans_pre_event", add_cistrans);
     
     reg("ether_pre_event", add_ether);
-    //reg("hydroxyl_pre_event", add_hydroxyl);
     reg("hydroxyl_lcb_pre_event", add_hydroxyl_lcb);
-    //reg("db_count_pre_event", add_double_bonds);
-    //reg("carbon_pre_event", add_carbon);
     reg("number_pre_event", handle_number);
     
     reg("mod_text_pre_event", increment_hydroxyl);
@@ -110,6 +106,7 @@ void LipidMapsParserEventHandler::reset_lipid(TreeNode* node){
     lcb = NULL;
     fa_list->clear();
     current_fa = NULL;
+    adduct = NULL;
     use_head_group = false;
     omit_fa = false;
     db_position = 0;
@@ -303,6 +300,7 @@ void LipidMapsParserEventHandler::build_lipid(TreeNode* node){
     ls->use_head_group = use_head_group;
     lipid = new LipidAdduct();
     lipid->lipid = ls;
+    lipid->adduct = adduct;
     BaseParserEventHandler<LipidAdduct*>::content = lipid;
 }
     

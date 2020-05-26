@@ -122,8 +122,7 @@ string goslin::replace_all(std::string str, const std::string& from, const std::
 }
 
 
-
-vector<string>* extract_text_based_rules(string grammar, char _quote){
+vector<string>* goslin::extract_text_based_rules(string grammar, char _quote){
     vector<string> *rules = NULL;
     int grammar_length = grammar.length();
     

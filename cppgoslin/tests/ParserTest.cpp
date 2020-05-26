@@ -781,6 +781,45 @@ int main(int argc, char** argv){
         assert(lipid);
         delete lipid;
     }
+    
+    
+    
+    
+    // test all grammars for adduct information
+    lipid_name = "PE 16:1/12:0[M+H]1+";
+    lipid = goslin_parser.parse(lipid_name);
+    assert(lipid);
+    assert(lipid->get_lipid_string() == "PE 16:1/12:0[M+H]1+");
+    delete lipid;
+
+
+    lipid_name = "LPE 16:1[M-H]1-";
+    lipid = goslin_fragment_parser.parse(lipid_name);
+    assert(lipid);
+    assert(lipid->get_lipid_string() == "LPE 16:1[M-H]1-");
+    delete lipid;
+    
+    
+    lipid_name = "PE(16:1/12:0)[M+H]1+";
+    lipid = swiss_lipids_parser.parse(lipid_name);
+    assert(lipid);
+    assert(lipid->get_lipid_string() == "PE 16:1/12:0[M+H]1+");
+    delete lipid;
+    
+    
+    lipid_name = "Cer(d16:1/12:0)[M+NH4]1+";
+    lipid = lipid_maps_parser.parse(lipid_name);
+    assert(lipid);
+    assert(lipid->get_lipid_string() == "Cer 16:1;2/12:0[M+NH4]1+");
+    delete lipid;
+    
+    
+    lipid_name = "HexCer(d16:1/12:0)[M+CH3COO]1-";
+    lipid = hmdb_parser.parse(lipid_name);
+    assert(lipid);
+    assert(lipid->get_lipid_string() == "HexCer 16:1;2/12:0[M+CH3COO]1-");
+    delete lipid;
+    
         
 
     cout << "All tests passed without any problem" << endl;

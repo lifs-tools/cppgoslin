@@ -31,6 +31,7 @@ SOFTWARE.
 #include "cppgoslin/domain/StringFunctions.h"
 
 using namespace std;
+using namespace goslin;
 
 void replaceAll(std::string& str, const std::string& from, const std::string& to) {
     if(from.empty())
@@ -56,7 +57,7 @@ void addingGrammar(ofstream& offile, string grammarName, string grammarFilename)
     
     string grammar((std::istreambuf_iterator<char>(infile)), (std::istreambuf_iterator<char>()));
     infile.close();
-    vector<string> *rules = extract_text_based_rules(grammar);
+    vector<string> *rules = extract_text_based_rules(grammar, DEFAULT_QUOTE);
     set<string> imported;
     int i = 0;
     while (i < (int)rules->size()){
@@ -91,7 +92,7 @@ void addingGrammar(ofstream& offile, string grammarName, string grammarFilename)
             }
             string grammar_import((std::istreambuf_iterator<char>(infile_import)), (std::istreambuf_iterator<char>()));
             infile_import.close();
-            vector<string> *rules_import = extract_text_based_rules(grammar_import);
+            vector<string> *rules_import = extract_text_based_rules(grammar_import, DEFAULT_QUOTE);
             
             int j = 1;
             while (j < (int)rules_import->size()){

@@ -52,7 +52,7 @@ enum MatchWords {NoMatch, LineCommentStart, LineCommentEnd, LongCommentStart, Lo
 namespace goslin {
     string replace_all(std::string str, const std::string& from, const std::string& to);
     string strip(string s, char c);
-    vector<string>* split_string(string text, char separator, char _quote = DEFAULT_QUOTE);
+    vector<string>* split_string(string text, char separator, char _quote = DEFAULT_QUOTE, bool with_empty = false);
     vector<string>* extract_text_based_rules(string grammar, char _quote = DEFAULT_QUOTE);
 }
 

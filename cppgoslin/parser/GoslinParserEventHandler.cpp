@@ -29,7 +29,7 @@ SOFTWARE.
 #define reg(x, y) BaseParserEventHandler<LipidAdduct*>::registered_events->insert({x, bind(&GoslinParserEventHandler::y, this, placeholders::_1)})
     
 
-GoslinParserEventHandler::GoslinParserEventHandler() : BaseParserEventHandler<LipidAdduct*>() {
+GoslinParserEventHandler::GoslinParserEventHandler() : AdductInfoParserEventHandler() {
     fa_list = new vector<FattyAcid*>();
     
     reg("lipid_pre_event", reset_lipid);
@@ -71,23 +71,12 @@ GoslinParserEventHandler::GoslinParserEventHandler() : BaseParserEventHandler<Li
     
     reg("db_single_position_pre_event", set_isomeric_level);
     reg("db_single_position_post_event", add_db_position);
-    //reg("db_position_number_pre_event", add_db_position_number);
     reg("cistrans_pre_event", add_cistrans);
     
     
     reg("ether_pre_event", add_ether);
     reg("old_hydroxyl_pre_event", add_old_hydroxyl);
-    //reg("db_count_pre_event", add_double_bonds);
-    //reg("carbon_pre_event", add_carbon);
-    //reg("hydroxyl_pre_event", add_hydroxyl);
-    
     reg("number_pre_event", handle_number);
-    
-    
-    reg("adduct_info_pre_event", new_adduct);
-    reg("adduct_pre_event", add_adduct);
-    reg("charge_pre_event", add_charge);
-    reg("charge_sign_pre_event", add_charge_sign);
 }
 
 
@@ -291,32 +280,5 @@ void GoslinParserEventHandler::add_carbon(TreeNode *node) {
 void GoslinParserEventHandler::add_hydroxyl(TreeNode *node) {
     current_fa->num_hydroxyl = atoi(node->get_text().c_str());
 }
-    
-    
-
-void GoslinParserEventHandler::new_adduct(TreeNode *node) {
-    adduct = new Adduct("", "", 0, 0);
-}
-    
-    
-
-void GoslinParserEventHandler::add_adduct(TreeNode *node) {
-    adduct->adduct_string = node->get_text();
-}
-    
-    
-
-void GoslinParserEventHandler::add_charge(TreeNode *node) {
-    adduct->charge = atoi(node->get_text().c_str());
-}
-    
-    
-
-void GoslinParserEventHandler::add_charge_sign(TreeNode *node) {
-    string sign = node->get_text();
-    if (sign == "+") adduct->set_charge_sign(1);
-    else if (sign == "-") adduct->set_charge_sign(-1);
-}
-        
 
         

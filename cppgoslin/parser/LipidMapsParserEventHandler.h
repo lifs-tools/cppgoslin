@@ -33,7 +33,7 @@ SOFTWARE.
 #include "cppgoslin/domain/LipidStructuralSubspecies.h"
 #include "cppgoslin/domain/LipidIsomericSubspecies.h"
 #include "cppgoslin/domain/FattyAcid.h"
-#include "cppgoslin/parser/BaseParserEventHandler.h"
+#include "cppgoslin/parser/AdductInfoParserEventHandler.h"
 #include <string>
 #include <set>
 #include <map>
@@ -46,7 +46,7 @@ using namespace goslin;
 
 static const set<string> head_group_exceptions = {"PA", "PC", "PE", "PG", "PI", "PS"};
 
-class LipidMapsParserEventHandler : public BaseParserEventHandler<LipidAdduct*> {
+class LipidMapsParserEventHandler : public AdductInfoParserEventHandler {
 public:
     LipidLevel level;
     LipidAdduct *lipid;

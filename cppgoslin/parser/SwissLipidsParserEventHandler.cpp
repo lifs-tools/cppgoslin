@@ -29,7 +29,7 @@ SOFTWARE.
 #define reg(x, y) BaseParserEventHandler<LipidAdduct*>::registered_events->insert({x, bind(&SwissLipidsParserEventHandler::y, this, placeholders::_1)})
     
 
-SwissLipidsParserEventHandler::SwissLipidsParserEventHandler() : BaseParserEventHandler<LipidAdduct*>() {
+SwissLipidsParserEventHandler::SwissLipidsParserEventHandler() : AdductInfoParserEventHandler() {
     fa_list = new vector<FattyAcid*>();
     
     
@@ -85,6 +85,7 @@ void SwissLipidsParserEventHandler::reset_lipid(TreeNode *node) {
     fa_list->clear();
     current_fa = NULL;
     use_head_group = false;
+    adduct = NULL;
     db_position = 0;
     db_cistrans = "";
 }
@@ -245,6 +246,7 @@ void SwissLipidsParserEventHandler::build_lipid(TreeNode *node) {
     ls->use_head_group = use_head_group;
     lipid = new LipidAdduct();
     lipid->lipid = ls;
+    lipid->adduct = adduct;
     BaseParserEventHandler<LipidAdduct*>::content = lipid;
 }
     
