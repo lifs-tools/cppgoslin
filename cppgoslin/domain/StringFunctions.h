@@ -32,6 +32,7 @@ SOFTWARE.
 #include <fstream>
 #include <sstream>
 #include "cppgoslin/domain/LipidExceptions.h"
+#include "cppgoslin/domain/Element.h"
 
 
 using namespace std;
@@ -48,9 +49,11 @@ enum Content {NoContext, InLineComment, InLongComment, InQuote};
 enum MatchWords {NoMatch, LineCommentStart, LineCommentEnd, LongCommentStart, LongCommentEnd, Quote};
 
 
-string replace_all(std::string str, const std::string& from, const std::string& to);
-string strip(string s, char c);
-vector<string>* split_string(string text, char separator, char _quote = DEFAULT_QUOTE);
-vector<string>* extract_text_based_rules(string grammar, char _quote = DEFAULT_QUOTE);
+namespace goslin {
+    string replace_all(std::string str, const std::string& from, const std::string& to);
+    string strip(string s, char c);
+    vector<string>* split_string(string text, char separator, char _quote = DEFAULT_QUOTE);
+    vector<string>* extract_text_based_rules(string grammar, char _quote = DEFAULT_QUOTE);
+}
 
 #endif /* STRINGFUNCTIONS_H */

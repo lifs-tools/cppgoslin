@@ -32,6 +32,9 @@ SOFTWARE.
 SwissLipidsParserEventHandler::SwissLipidsParserEventHandler() : BaseParserEventHandler<LipidAdduct*>() {
     fa_list = new vector<FattyAcid*>();
     
+    
+
+        
     reg("lipid_pre_event", reset_lipid);
     reg("lipid_post_event", build_lipid);
     reg("fa_hg_pre_event", set_head_group_name);
@@ -45,7 +48,7 @@ SwissLipidsParserEventHandler::SwissLipidsParserEventHandler() : BaseParserEvent
     reg("sl_hg_pre_event", set_head_group_name);
     reg("st_species_hg_pre_event", set_head_group_name);
     reg("st_sub1_hg_pre_event", set_head_group_name);
-    reg("st_sub2_hg_pre_event", set_head_group_name);
+    reg("st_sub2_hg_pre_event", set_head_group_name_se);
     reg("fa_species_pre_event", set_species_level);
     reg("gl_molecular_pre_event", set_molecular_level);
     reg("unsorted_fa_separator_pre_event", set_molecular_level);
@@ -54,7 +57,6 @@ SwissLipidsParserEventHandler::SwissLipidsParserEventHandler() : BaseParserEvent
     reg("fa4_unsorted_pre_event", set_molecular_level);
     reg("db_single_position_pre_event", set_isomeric_level);
     reg("db_single_position_post_event", add_db_position);
-    //reg("db_position_number_pre_event", add_db_position_number);
     reg("cistrans_pre_event", add_cistrans);
     reg("lcb_pre_event", new_lcb);
     reg("lcb_post_event", clean_lcb);
@@ -62,9 +64,10 @@ SwissLipidsParserEventHandler::SwissLipidsParserEventHandler() : BaseParserEvent
     reg("fa_post_event", append_fa);
     reg("ether_pre_event", add_ether);
     reg("hydroxyl_pre_event", add_hydroxyl);
-    //reg("db_count_pre_event", add_double_bonds);
-    //reg("carbon_pre_event", add_carbon);
     reg("number_pre_event", handle_number);
+    reg("sl_lcb_species_pre_event", set_species_level);
+    reg("st_species_fa_post_event", se_species_fa);
+    reg("fa_lcb_suffix_type_pre_event", add_one_hydroxyl);
     
 }
 
@@ -122,6 +125,11 @@ void SwissLipidsParserEventHandler::add_cistrans(TreeNode* node){
 
 void SwissLipidsParserEventHandler::set_head_group_name(TreeNode *node) {
     head_group = node->get_text();
+}
+
+
+void SwissLipidsParserEventHandler::set_head_group_name_se(TreeNode *node){
+    head_group = replace_all(node->get_text(), "(", " ");
 }
 
 
@@ -206,7 +214,6 @@ void SwissLipidsParserEventHandler::build_lipid(TreeNode *node) {
         fa_list->insert(fa_list->begin(), lcb);
     }
     
-    
     lipid = NULL;
     LipidSpecies *ls = NULL;
 
@@ -246,7 +253,10 @@ void SwissLipidsParserEventHandler::build_lipid(TreeNode *node) {
 void SwissLipidsParserEventHandler::add_ether(TreeNode *node) {
     string ether = node->get_text();
     if (ether == "O-") current_fa->lipid_FA_bond_type = ETHER_PLASMANYL;
-    else if (ether == "P-") current_fa->lipid_FA_bond_type = ETHER_PLASMENYL;
+    else if (ether == "P-"){
+        current_fa->lipid_FA_bond_type = ETHER_PLASMENYL;
+        current_fa->num_double_bonds += 1;
+    }
 }
     
     
@@ -257,11 +267,16 @@ void SwissLipidsParserEventHandler::add_hydroxyl(TreeNode *node) {
     else if (old_hydroxyl == "d") current_fa->num_hydroxyl = 2;
     else if (old_hydroxyl == "t") current_fa->num_hydroxyl = 3;
 }
+
+
+void SwissLipidsParserEventHandler::add_one_hydroxyl(TreeNode *node) {
+    current_fa->num_hydroxyl += 1;
+}
     
     
 
 void SwissLipidsParserEventHandler::add_double_bonds(TreeNode *node) {
-    current_fa->num_double_bonds = atoi(node->get_text().c_str());
+    current_fa->num_double_bonds += atoi(node->get_text().c_str());
 }
     
     
@@ -272,4 +287,9 @@ void SwissLipidsParserEventHandler::add_carbon(TreeNode *node) {
 
         
 
+void SwissLipidsParserEventHandler::se_species_fa(TreeNode *node){
+    head_group += " 27:1";
+    fa_list->at(fa_list->size() -1)->num_carbon -= 27;
+    fa_list->at(fa_list->size() -1)->num_double_bonds -= 1;
+}
         

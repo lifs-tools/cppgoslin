@@ -48,7 +48,7 @@ void addingGrammar(ofstream& offile, string grammarName, string grammarFilename)
 
     
     ifstream infile(grammarFilename.c_str());
-    offile << "static const string " + grammarName + " = \"";
+    offile << "const string " + grammarName + " = \"";
     if (!infile.good()){
         cout << "Error: file '" + grammarFilename + "' not found." << endl;
         exit(-1);
@@ -151,7 +151,7 @@ void writeGrammarHeader(string ofFileName){
     offile << "#define KNOWN_GRAMMARS_H" << endl << endl;
 
     offile << "#include <string>" << endl;
-    offile << "#include \"cppgoslin/parser/Parser.h\"" << endl;
+    //offile << "#include \"cppgoslin/parser/Parser.h\"" << endl;
 
     offile << "using namespace std;" << endl;
 
@@ -169,6 +169,9 @@ void writeGrammarHeader(string ofFileName){
     offile << endl << endl << endl;
     
     addingGrammar(offile, "hmdb_grammar", "data/goslin/HMDB.g4");
+    offile << endl << endl << endl;
+    
+    addingGrammar(offile, "sum_formula_grammar", "data/goslin/SumFormula.g4");
     offile << endl << endl << endl;
     
     offile << "#endif /* KNOWN_GRAMMARS_H */" << endl;

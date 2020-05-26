@@ -26,7 +26,6 @@ SOFTWARE.
 
 #include "FattyAcid.h"
 
-
 FattyAcid::FattyAcid(string _name, int _num_carbon, int _num_double_bonds, int _num_hydroxyl, LipidFaBondType _lipid_FA_bond_type, bool _lcb, int _position, map<int, string> *_double_bond_positions){
     name = _name;
     position = _position;
@@ -36,6 +35,9 @@ FattyAcid::FattyAcid(string _name, int _num_carbon, int _num_double_bonds, int _
     lipid_FA_bond_type = _lipid_FA_bond_type;
     lcb = _lcb;
     if (_double_bond_positions != NULL){
+        if (num_double_bonds != (int)_double_bond_positions->size()) {
+            throw ConstraintViolationException("Isomeric FattyAcid must receive double bond positions for all double bonds! Got " + std::to_string(num_double_bonds) + " double bonds and " + std::to_string(_double_bond_positions->size()) + " positions.");
+        }
         for (auto kv : *_double_bond_positions){
             double_bond_positions.insert({kv.first, kv.second});
         }
@@ -110,6 +112,10 @@ string FattyAcid::to_string(bool special_case){
     if (special_case && lipid_suffix.length() > 0) s << "O-";
     s << num_carbon << ":" << num_double_bonds;
     
+    if (double_bond_positions.size() > 0 && num_double_bonds != (int)double_bond_positions.size()) {
+        throw ConstraintViolationException("Isomeric FattyAcid must receive double bond positions for all double bonds! Got " + std::to_string(num_double_bonds) + " double bonds and " + std::to_string(double_bond_positions.size()) + " positions.");
+    }
+    
     if (double_bond_positions.size()){
         stringstream db;
         db << "(";
@@ -126,4 +132,43 @@ string FattyAcid::to_string(bool special_case){
     if (num_hydroxyl) s << ";" << num_hydroxyl;
     s << lipid_suffix;
     return s.str();
+}
+
+
+ElementTable* FattyAcid::get_elements(){
+    ElementTable* table = create_empty_table();
+    
+    if (!lcb){ 
+        
+        if (num_carbon > 0 || num_double_bonds > 0){
+            table->at(ELEMENT_C) = num_carbon; // C
+            switch(lipid_FA_bond_type)
+            {
+                case ESTER:
+                    table->at(ELEMENT_H) = (2 * num_carbon - 1 - 2 * num_double_bonds); // H
+                    table->at(ELEMENT_O) = (1 + num_hydroxyl); // O
+                    break;
+                case ETHER_PLASMENYL:
+                    table->at(ELEMENT_H) = (2 * num_carbon - 1 - 2 * num_double_bonds + 2); // H
+                    table->at(ELEMENT_O) = num_hydroxyl; // O
+                    break;
+                case ETHER_PLASMANYL:
+                    table->at(ELEMENT_H) = ((num_carbon + 1) * 2 - 1 - 2 * num_double_bonds); // H
+                    table->at(ELEMENT_O) = num_hydroxyl; // O
+                    break;
+                default:
+                    throw LipidException("Mass cannot be computed for fatty acyl chain with bond type: " + std::to_string(lipid_FA_bond_type));
+            }
+        }
+    }
+    else 
+    {
+        // long chain base
+        table->at(ELEMENT_C) = num_carbon; // C
+        table->at(ELEMENT_H) = (2 * (num_carbon - num_double_bonds) + 1); // H
+        table->at(ELEMENT_O) = num_hydroxyl; // O
+        table->at(ELEMENT_N) = 1; // N
+    }
+    
+    return table;
 }

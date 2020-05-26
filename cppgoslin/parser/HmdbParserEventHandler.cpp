@@ -54,7 +54,6 @@ HmdbParserEventHandler::HmdbParserEventHandler() : BaseParserEventHandler<LipidA
     reg("fa4_unsorted_pre_event", set_molecular_level);
     reg("db_single_position_pre_event", set_isomeric_level);
     reg("db_single_position_post_event", add_db_position);
-    //reg("db_position_number_pre_event", add_db_position_number);
     reg("cistrans_pre_event", add_cistrans);
     reg("lcb_pre_event", new_lcb);
     reg("lcb_post_event", clean_lcb);
@@ -62,10 +61,8 @@ HmdbParserEventHandler::HmdbParserEventHandler() : BaseParserEventHandler<LipidA
     reg("fa_post_event", append_fa);
     reg("ether_pre_event", add_ether);
     reg("hydroxyl_pre_event", add_hydroxyl);
-    //reg("db_count_pre_event", add_double_bonds);
-    //reg("carbon_pre_event", add_carbon);
     reg("number_pre_event", handle_number);
-        
+    reg("fa_lcb_suffix_type_pre_event", add_one_hydroxyl);
     reg("furan_fa_pre_event", furan_fa);
     reg("interlink_fa_pre_event", interlink_fa);
     reg("lipid_suffix_pre_event", lipid_suffix);
@@ -263,7 +260,11 @@ void HmdbParserEventHandler::add_hydroxyl(TreeNode *node) {
     else if (old_hydroxyl == "d") current_fa->num_hydroxyl = 2;
     else if (old_hydroxyl == "t") current_fa->num_hydroxyl = 3;
 }
-    
+
+
+void HmdbParserEventHandler::add_one_hydroxyl(TreeNode *node) {
+    current_fa->num_hydroxyl += 1;
+}
     
 
 void HmdbParserEventHandler::add_double_bonds(TreeNode *node) {

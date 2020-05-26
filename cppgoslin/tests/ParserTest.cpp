@@ -31,7 +31,7 @@ SOFTWARE.
 #include <iostream>
 #include <cassert>
 #include <fstream>
-
+#include <math.h>
 
 using namespace std;
 using namespace goslin;
@@ -47,6 +47,7 @@ int main(int argc, char** argv){
     LipidMapsParser lipid_maps_parser;
     GoslinFragmentParser goslin_fragment_parser;
     SwissLipidsParser swiss_lipids_parser;
+    HmdbParser hmdb_parser;
     
     
     // test bitfield
@@ -100,7 +101,6 @@ int main(int argc, char** argv){
     
     
     
-    
     // check lipid maps and swiss lipids parser with illegal lipid name
     string failLipidSL = "TG(16::1_18:1_24:0)";
     try {
@@ -137,6 +137,52 @@ int main(int argc, char** argv){
     
     
     
+    
+    lipid = swiss_lipids_parser.parse("Cer(d18:1(4E)/24:0-2OH)");
+    assert (lipid);
+    assert (lipid->get_lipid_string() == "Cer 18:1(4E);2/24:0;1");
+    assert (lipid->get_sum_formula() == "C42H83NO4");
+    assert (abs(lipid->get_mass() - 665.632209) < 1e-3);
+    delete lipid;
+        
+        
+    lipid = swiss_lipids_parser.parse("Cer(d18:1(4E)/24:0(2OH))");
+    assert (lipid);
+    assert (lipid->get_lipid_string() == "Cer 18:1(4E);2/24:0;1");
+    assert (lipid->get_sum_formula() == "C42H83NO4");
+    assert (abs(lipid->get_mass() - 665.632209) < 1e-3);
+    delete lipid;
+    
+        
+        
+    lipid = lipid_maps_parser.parse("Cer(d18:1(4E)/24:0(2OH))");
+    assert (lipid);
+    assert (lipid->get_lipid_string() == "Cer 18:1(4E);2/24:0;1");
+    assert (lipid->get_sum_formula() == "C42H83NO4");
+    assert (abs(lipid->get_mass() - 665.632209) < 1e-3);
+    delete lipid;
+        
+    
+    lipid = goslin_parser.parse("Cer 18:1(4E);2/24:0;1");
+    assert (lipid);
+    assert (lipid->get_lipid_string() == "Cer 18:1(4E);2/24:0;1");
+    assert (lipid->get_sum_formula() == "C42H83NO4");
+    assert (abs(lipid->get_mass() - 665.632209) < 1e-3);
+    delete lipid;
+        
+    lipid = hmdb_parser.parse("SM(d18:1/16:1(9Z)(OH))");
+    assert (lipid);
+    assert (lipid->get_lipid_string() == "SM 18:1;2/16:1(9Z);1");
+    assert (lipid->get_sum_formula() == "C39H77N2O7P");
+    assert (abs(lipid->get_mass() - 716.546841) < 1e-3);
+    delete lipid;
+    
+    
+    
+    
+    
+    
+    
     lipid_name = "PG(22:1(5Z)/12:0)";
     lipid = swiss_lipids_parser.parse(lipid_name);
     assert (lipid);
@@ -144,12 +190,14 @@ int main(int argc, char** argv){
     assert (lipid->get_lipid_string() == "PG 22:1(5Z)/12:0");
     delete lipid;
     
+    
     lipid_name = "PG(22:1/12:0)";
     lipid = swiss_lipids_parser.parse(lipid_name);
     assert (lipid);
     assert (lipid->lipid->info.level == STRUCTURAL_SUBSPECIES);
     assert (lipid->get_lipid_string() == "PG 22:1/12:0");
     delete lipid;
+    
     
     lipid_name = "PG(22:1_12:0)";
     lipid = swiss_lipids_parser.parse(lipid_name);
@@ -181,7 +229,22 @@ int main(int argc, char** argv){
         lipid = lipid_parser.parse(lipid_name);
         assert (false);
     }
-    catch(LipidException &e){ }
+    catch(LipidException &e){
+    }
+    
+    
+    
+    lipid_name = "PA 19:2(12E)/12:0";
+    lipid = lipid_parser.parse(lipid_name);
+    try {
+        string l = lipid->get_lipid_string();
+        assert (false);
+        assert(l == "foo");
+    }
+    catch(LipidException &e){
+        delete lipid;
+    }
+    
     
     
     
@@ -376,7 +439,7 @@ int main(int argc, char** argv){
                         {"TG(13:0/22:3(10Z,13Z,16Z)/22:5(7Z,10Z,13Z,16Z,19Z))[iso6]", "TAG 13:0/22:3(10Z,13Z,16Z)/22:5(7Z,10Z,13Z,16Z,19Z)"},
                         {"13R-HODE", "13R-HODE"},
                         {"CL(1'-[20:0/20:0],3'-[20:4(5Z,8Z,11Z,14Z)/18:2(9Z,12Z)])", "CL 20:0/20:0/20:4(5Z,8Z,11Z,14Z)/18:2(9Z,12Z)"},
-                        {"PA(P-20:0/18:3(6Z,9Z,12Z))", "PA 20:0p/18:3(6Z,9Z,12Z)"},
+                        {"PA(P-20:0/18:3(6Z,9Z,12Z))", "PA 20:1p/18:3(6Z,9Z,12Z)"},
                         {"M(IP)2C(t18:0/20:0(2OH))", "M(IP)2C 18:0;3/20:0;1"},
                         {"Cer(d16:2(4E,6E)/22:0(2OH))", "Cer 16:2(4E,6E);2/22:0;1"},
                         {"MG(18:1(11E)/0:0/0:0)[rac]", "MAG 18:1(11E)"},
@@ -535,6 +598,60 @@ int main(int argc, char** argv){
     delete lipid;
     
     // glycerolipid;
+    
+    lipid_name = "TAG 16:1(5E)/18:0/20:2(3Z,6Z)";
+    lipid = goslin_parser.parse(lipid_name);
+    assert (lipid);
+    assert (lipid->get_lipid_string(STRUCTURAL_SUBSPECIES) == "TAG 16:1(5E)/18:0/20:2(3Z,6Z)");
+    assert (lipid->get_lipid_string(MOLECULAR_SUBSPECIES) == "TAG 16:1(5E)-18:0-20:2(3Z,6Z)");
+    assert (lipid->get_lipid_string(SPECIES) == "TAG 54:3");
+    assert (lipid->get_lipid_string(CLASS) == "TAG");
+    assert (lipid->get_lipid_string(CATEGORY) == "GL");
+    assert (lipid->lipid);
+    
+    
+    // try to retrieve LipidSpeciesInfo for summary information
+    LipidSpeciesInfo lsi = lipid->lipid->info;
+    assert (lsi.lcb == false);
+    assert (lsi.level == ISOMERIC_SUBSPECIES);
+    assert (lsi.lipid_FA_bond_type == ESTER);
+    assert (lsi.num_carbon == 54);
+    assert (lsi.num_double_bonds == 3);
+    assert (lsi.num_hydroxyl == 0);
+    assert (lsi.position == 0);
+    // check that all FAs have been initialized properly
+    assert (lipid->lipid->get_fa_list().size() == 3);
+    faCnt = 1;
+    for(FattyAcid* fa:lipid->lipid->get_fa_list()) {
+        // cout << (*fa).name << " (lcb: " << ((*fa).lcb?"true":"false") << "): pos=" << (*fa).position << ", #carbon=" << (*fa).num_carbon << ", #hydroxyl=" << (*fa).num_hydroxyl << ", #double-bonds=" << (*fa).num_double_bonds << endl;
+        assert ((*fa).position == faCnt);
+        switch(faCnt) {
+        case 1:
+            assert ((*fa).lcb == false);
+            assert ((*fa).num_carbon == 16);
+            assert ((*fa).num_hydroxyl == 0);
+            assert (FattyAcid::suffix((*fa).lipid_FA_bond_type) == "");
+            assert ((*fa).num_double_bonds == 1);
+            break;
+        case 2:
+            assert ((*fa).lcb == false);
+            assert ((*fa).num_carbon == 18);
+            assert ((*fa).num_hydroxyl == 0);
+            assert (FattyAcid::suffix((*fa).lipid_FA_bond_type) == "");
+            assert ((*fa).num_double_bonds == 0);
+            break;
+        case 3:
+            assert ((*fa).lcb == false);
+            assert ((*fa).num_carbon == 20);
+            assert ((*fa).num_hydroxyl == 0);
+            assert (FattyAcid::suffix((*fa).lipid_FA_bond_type) == "");
+            assert ((*fa).num_double_bonds == 2);
+            break;
+        }
+        ++faCnt;
+    }
+    delete lipid;
+    
     lipid_name = "TAG 16:1/12:0/20:2";
     lipid = goslin_parser.parse(lipid_name);
     assert (lipid);
@@ -547,7 +664,7 @@ int main(int argc, char** argv){
     
     
     // try to retrieve LipidSpeciesInfo for summary information
-    LipidSpeciesInfo lsi = lipid->lipid->info;
+    lsi = lipid->lipid->info;
     assert (lsi.lcb == false);
     assert (lsi.level == STRUCTURAL_SUBSPECIES);
     assert (lsi.lipid_FA_bond_type == ESTER);
