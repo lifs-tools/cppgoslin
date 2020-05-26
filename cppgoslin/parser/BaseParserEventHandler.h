@@ -30,6 +30,7 @@ SOFTWARE.
 #include <set>
 #include <map>
 #include <string>
+#include <vector>
 #include <functional>
 #include "cppgoslin/domain/LipidExceptions.h"
 #include "cppgoslin/domain/StringFunctions.h"

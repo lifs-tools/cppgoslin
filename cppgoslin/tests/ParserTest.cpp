@@ -37,7 +37,6 @@ using namespace std;
 using namespace goslin;
 
 int main(int argc, char** argv){
-    char PARSER_QUOTE = '\'';
     
     
     LipidAdduct* lipid;
@@ -82,21 +81,18 @@ int main(int argc, char** argv){
     
     
     
-    // Pure Parser test
-    GoslinParserEventHandler goslin_parser_event_handler;
-    Parser<LipidAdduct*> goslin_parser_pure(&goslin_parser_event_handler, "data/goslin/Goslin.g4", PARSER_QUOTE);
     
     // check goslin pure parser with illegal lipid name
     string failLipid = "TAG 16::1-18:1-24:0";
     try {
-        lipid = goslin_parser_pure.parse(failLipid);
+        lipid = goslin_parser.parse(failLipid);
         assert (false);
     }
     catch (LipidException &e){ }
 
     // glycerophospholipid
     for (auto the_lipid_name : { "TAG 16:1-18:1-24:0", "PE 16:1/12:0", "DAG 16:1-12:0", "12-HETE", "HexCer 18:1;2/16:0"}){
-        LipidAdduct* lipid = goslin_parser_pure.parse(the_lipid_name);
+        LipidAdduct* lipid = goslin_parser.parse(the_lipid_name);
         assert (lipid);
         delete lipid;
     }

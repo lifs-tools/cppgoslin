@@ -25,8 +25,10 @@ SOFTWARE.
 
 
 #include <fstream>
+#include <set>
 #include <iostream>
 #include <stdlib.h>
+#include "cppgoslin/domain/StringFunctions.h"
 
 using namespace std;
 
@@ -52,13 +54,63 @@ void addingGrammar(ofstream& offile, string grammarName, string grammarFilename)
         exit(-1);
     }
     
-    string line;
-    while (getline(infile, line)){
-        replaceAll(line, "\\", "\\\\");
-        replaceAll(line, "\"", "\\\"");
-        line += " \\n\\";
-        offile << line << endl;
+    string grammar((std::istreambuf_iterator<char>(infile)), (std::istreambuf_iterator<char>()));
+    infile.close();
+    vector<string> *rules = extract_text_based_rules(grammar);
+    set<string> imported;
+    int i = 0;
+    while (i < (int)rules->size()){
+        string rule = rules->at(i);
+        
+        // checking for import
+        vector<string>* tokens = split_string(rule, ' ', DEFAULT_QUOTE);
+        if (tokens->size() == 2 && tokens->at(0) == IMPORT_TERM){
+            
+            string import_grammar = strip(tokens->at(1), ' ');
+            if (imported.find(import_grammar) != imported.end()){
+                cout << "Error: grammar '" << import_grammar << "' is already imported";
+                exit(-1);
+            }
+            
+            char sep = '/';
+            #ifdef _WIN32
+            sep = '\\';
+            #endif
+            
+            size_t i = grammarFilename.rfind(sep, grammarFilename.length());
+            string dir_path = "";
+            if (i != string::npos) {
+                dir_path = grammarFilename.substr(0, i);
+            }
+            string import_file = dir_path + sep + import_grammar + ".g4";
+            
+            ifstream infile_import(import_file);
+            if (!infile.good()){
+                cout << "Error: import file '" + import_grammar + "' not found in path '" + import_file + "'." << endl;
+                exit(-1);
+            }
+            string grammar_import((std::istreambuf_iterator<char>(infile_import)), (std::istreambuf_iterator<char>()));
+            infile_import.close();
+            vector<string> *rules_import = extract_text_based_rules(grammar_import);
+            
+            int j = 1;
+            while (j < (int)rules_import->size()){
+                rules->push_back(rules_import->at(j++));
+            }
+            
+            delete rules_import;        
+                    
+        }
+        else {
+            replaceAll(rule, "\\", "\\\\");
+            replaceAll(rule, "\"", "\\\"");
+            rule += "; \\n\\";
+            offile << rule << endl;
+        }
+        delete tokens;
+        ++i;
     }
+    delete rules;
     offile << "\";" << endl;
 }
 

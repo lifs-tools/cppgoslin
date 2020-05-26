@@ -41,8 +41,6 @@ SOFTWARE.
 #include <algorithm>
 #include <iterator>
 
-enum Content {NoContext, InLineComment, InLongComment, InQuote};
-enum MatchWords {NoMatch, LineCommentStart, LineCommentEnd, LongCommentStart, LongCommentEnd, Quote};
 
 using namespace std;
 
@@ -138,9 +136,6 @@ class Parser {
 public:
     static const uint32_t SHIFT;
     static const uint64_t MASK;
-    static const char RULE_ASSIGNMENT;
-    static const char RULE_SEPARATOR;
-    static const char RULE_TERMINAL;
     static const char EOF_SIGN;
     static const uint64_t EOF_RULE;
     static const uint64_t START_RULE;
@@ -169,7 +164,6 @@ public:
     void read_grammar(string grammar);
     virtual ~Parser();
     uint64_t get_next_free_rule_index();
-    vector<string>* extract_text_based_rules(string grammar_filename, char _quote = DEFAULT_QUOTE);
     vector<uint64_t>* top_nodes(uint64_t rule_index);
     static uint64_t compute_rule_key(uint64_t rule_index_1, uint64_t rule_index_2);
     bool is_terminal(string product_token, char _quote);
