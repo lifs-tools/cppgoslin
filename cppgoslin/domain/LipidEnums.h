@@ -95,7 +95,7 @@ struct LipidClassMeta {
 
 
 typedef map<LipidClass, LipidClassMeta> ClassMap;
-enum LipidFaBondType { UNDEFINED_FA = 0, ETHER_PLASMANYL = 1, ETHER_PLASMENYL = 2, ETHER = 3, ESTER = 4, LCB_REGULAR = 5, LCB_EXCEPTION = 6,  AMIDE = 7, ETHER_UNSPECIFIED = 8, NO_FA = 9};
+enum LipidFaBondType {LCB_REGULAR = 0, LCB_EXCEPTION = 1, ETHER_PLASMANYL = 2, ETHER_PLASMENYL = 3, ETHER = 4, ETHER_UNSPECIFIED = 5, ESTER = 6, AMIDE = 7, UNDEFINED_FA = 8, NO_FA = 9};
 
 
 static const set<LipidFaBondType> LCB_STATES {LCB_REGULAR, LCB_EXCEPTION};
