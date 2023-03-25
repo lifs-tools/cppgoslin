@@ -146,9 +146,7 @@ void LipidMapsParserEventHandler::pure_fa(TreeNode* node){
 
 
 void LipidMapsParserEventHandler::set_heavy_element(TreeNode* node){
-    cout << "in" << endl;
     adduct->heavy_elements.at(ELEMENT_H2) = 0;
-    cout << "out" << endl;
 }
 
 
