@@ -108,7 +108,7 @@ LipidMapsParserEventHandler::LipidMapsParserEventHandler() : LipidBaseParserEven
     reg("isotope_number_pre_event", set_heavy_number);
     
     reg("sphinga_pre_event", new_sphinga);
-    reg("sphinga_phosphate_pre_event", add_phosphate);
+    reg("sphinga_phospho_pre_event", add_phospho);
     reg("sphinga_suffix_pre_event", sphinga_db_set);
     reg("sphinga_lcb_len_pre_event", add_carbon_pre_len);
     reg("sphinga_prefix_pre_event", set_hydro_pre_num);
@@ -224,8 +224,14 @@ void LipidMapsParserEventHandler::set_hydro_pre_num(TreeNode* node){
         
         
         
-void LipidMapsParserEventHandler::add_phosphate(TreeNode* node){
-    head_group += "P";
+void LipidMapsParserEventHandler::add_phospho(TreeNode* node){
+    string phospho_suffix = node->get_text();
+    if (phospho_suffix == "1-phosphate"){
+        head_group += "P";
+    }
+    else if (phospho_suffix == "1-phosphocholine"){
+        head_group = "LSM";
+    }
     lcb_hydro_pre_set.erase(lcb_hydro_pre_set.begin());
 }
 

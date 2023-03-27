@@ -100,7 +100,7 @@ public:
     void set_heavy_element(TreeNode *node);
     void set_heavy_number(TreeNode *node);
     void new_sphinga(TreeNode *node);
-    void add_phosphate(TreeNode *node);
+    void add_phospho(TreeNode *node);
     void sphinga_db_set(TreeNode *node);
     void add_carbon_pre_len(TreeNode *node);
     void set_hydro_pre_num(TreeNode *node);
