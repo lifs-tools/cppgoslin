@@ -51,7 +51,9 @@ int main(int argc, char** argv){
     LipidAdduct* lipid;
     LipidMapsParser parser;
     
-    
+    lipid = parser.parse("15S-HETE-d8");
+    assert_true(lipid->get_sum_formula(), "C20H24O3H'8");
+    delete lipid;
     
     lipid = parser.parse("Cer(d18:1(8Z)/24:0)");
     assert_true(lipid->get_lipid_string(STRUCTURE_DEFINED), "Cer 18:1(8);(OH)2/24:0");
