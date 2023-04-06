@@ -627,7 +627,7 @@ void GoslinParserEventHandler::add_hydroxyl(TreeNode *node) {
     
 
 void GoslinParserEventHandler::new_adduct(TreeNode *node) {
-    adduct = new Adduct("", "");
+    if (!adduct) adduct = new Adduct("", "");
 }
     
     
@@ -648,6 +648,7 @@ void GoslinParserEventHandler::add_charge_sign(TreeNode *node) {
     string sign = node->get_text();
     if (sign == "+") adduct->set_charge_sign(1);
     else if (sign == "-") adduct->set_charge_sign(-1);
+    if (adduct->charge == 0) adduct->charge = 1;
 }
         
 

@@ -76,7 +76,7 @@ string Adduct::get_heavy_isotope_string(){
     stringstream ss;
     for (auto e : element_order){
         if (heavy_elements[e] > 0){
-            ss << heavy_elements[e] << heavy_shortcut.at(e);
+            ss << heavy_shortcut.at(e) << heavy_elements[e];
         }
     }
     return ss.str();
