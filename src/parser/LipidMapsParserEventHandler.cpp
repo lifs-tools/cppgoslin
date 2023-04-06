@@ -436,7 +436,7 @@ void LipidMapsParserEventHandler::clean_lcb(TreeNode *node) {
     if (sphinga_prefix == "Phyto" && !sphinga_pure){
         set<int> pos_hydro;
         for (auto fg : lcb->functional_groups->at("OH")) pos_hydro.insert(fg->position);
-        if (lcb->functional_groups->empty() || uncontains_val_p(lcb->functional_groups, "OH") or uncontains_val(pos_hydro, 4)){
+        if (lcb->functional_groups->empty() || uncontains_val_p(lcb->functional_groups, "OH") || uncontains_val(pos_hydro, 4)){
             throw LipidException("hydroxyl count does not match with head group description");
         }
     }
