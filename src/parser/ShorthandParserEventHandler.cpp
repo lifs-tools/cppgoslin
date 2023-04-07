@@ -29,9 +29,6 @@ SOFTWARE.
 #define FA_I ("fa" + std::to_string(current_fas.size()))
 
 
-const map<string, Element> ShorthandParserEventHandler::heavy_element_table = {{"[2]H", ELEMENT_H2}, {"[13]C", ELEMENT_C13}, {"[15]N", ELEMENT_N15}, {"[17]O", ELEMENT_O17}, {"[18]O", ELEMENT_O18}, {"[32]P", ELEMENT_P32}, {"[33]S", ELEMENT_S33}, {"[34]S", ELEMENT_S34}};
-
-
 
 ShorthandParserEventHandler::ShorthandParserEventHandler() : LipidBaseParserEventHandler() {
     

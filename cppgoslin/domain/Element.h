@@ -60,6 +60,10 @@ const map<Element, Element> heavy_to_regular = {{ELEMENT_H2, ELEMENT_H}, {ELEMEN
 
 
 const vector<Element> element_order = {ELEMENT_C, ELEMENT_H, ELEMENT_As, ELEMENT_Br, ELEMENT_Cl, ELEMENT_F, ELEMENT_I, ELEMENT_N, ELEMENT_O, ELEMENT_P, ELEMENT_S, ELEMENT_H2, ELEMENT_C13, ELEMENT_N15, ELEMENT_O17, ELEMENT_O18, ELEMENT_P32, ELEMENT_S33, ELEMENT_S34};
+
+
+const map<string, Element> heavy_element_table = {{"[2]H", ELEMENT_H2}, {"[13]C", ELEMENT_C13}, {"[15]N", ELEMENT_N15}, {"[17]O", ELEMENT_O17}, {"[18]O", ELEMENT_O18}, {"[32]P", ELEMENT_P32}, {"[33]S", ELEMENT_S33}, {"[34]S", ELEMENT_S34}};
+
 }
 
 

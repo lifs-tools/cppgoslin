@@ -130,8 +130,6 @@ public:
     void set_heavy_element(TreeNode *node);
     void set_heavy_number(TreeNode *node);
     void add_heavy_component(TreeNode *node);
-    
-    static const map<string, Element> heavy_element_table;
 };
 
 
