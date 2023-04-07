@@ -95,7 +95,7 @@ int main(int argc, char** argv){
     catch (LipidException &e){ }
 
     // glycerophospholipid
-    for (auto the_lipid_name : { "TAG 16:1-18:1-24:0", "PE 16:1/12:0", "DAG 16:1-12:0", "12-HETE", "HexCer 18:1;2/16:0"}){
+    for (auto the_lipid_name : { "TAG 16:1-18:1-24:0", "PE 16:1/12:0", "DAG 16:1-12:0", "12-HETE", "15S-HETE-d8", "HexCer 18:1;2/16:0"}){
         LipidAdduct* lipid = goslin_parser_pure.parse(the_lipid_name);
         assert (lipid);
         delete lipid;
