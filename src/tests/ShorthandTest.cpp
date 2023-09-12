@@ -94,30 +94,30 @@ int main(int argc, char** argv){
     l = parser.parse("Gal-Cer(1) 18:1(5Z);3OH/24:0");
     assertEqual(l->get_lipid_string(), "Gal-Cer(1) 18:1(5Z);3OH/24:0");
     assertEqual(l->get_lipid_string(STRUCTURE_DEFINED), "Gal-Cer 18:1(5);OH/24:0");
-    assertEqual(l->get_lipid_string(SN_POSITION), "GalCer 18:1;O2/24:0");
-    assertEqual(l->get_lipid_string(MOLECULAR_SPECIES), "GalCer 18:1;O2/24:0");
-    assertEqual(l->get_lipid_string(SPECIES), "GalCer 42:1;O2");
+    assertEqual(l->get_lipid_string(SN_POSITION), "HexCer 18:1;O2/24:0");
+    assertEqual(l->get_lipid_string(MOLECULAR_SPECIES), "HexCer 18:1;O2/24:0");
+    assertEqual(l->get_lipid_string(SPECIES), "HexCer 42:1;O2");
     assertEqual(l->get_sum_formula(), "C48H93NO8");
     delete l;
     
     l = parser.parse("Gal-Cer 18:1(5);OH/24:0");
     assertEqual(l->get_lipid_string(), "Gal-Cer 18:1(5);OH/24:0");
-    assertEqual(l->get_lipid_string(SN_POSITION), "GalCer 18:1;O2/24:0");
-    assertEqual(l->get_lipid_string(MOLECULAR_SPECIES), "GalCer 18:1;O2/24:0");
-    assertEqual(l->get_lipid_string(SPECIES), "GalCer 42:1;O2");
+    assertEqual(l->get_lipid_string(SN_POSITION), "HexCer 18:1;O2/24:0");
+    assertEqual(l->get_lipid_string(MOLECULAR_SPECIES), "HexCer 18:1;O2/24:0");
+    assertEqual(l->get_lipid_string(SPECIES), "HexCer 42:1;O2");
     assertEqual(l->get_sum_formula(), "C48H93NO8");
     delete l;
     
     
-    l = parser.parse("GalCer 18:1;O2/24:0");
-    assertEqual(l->get_lipid_string(), "GalCer 18:1;O2/24:0");
-    assertEqual(l->get_lipid_string(SPECIES), "GalCer 42:1;O2");
+    l = parser.parse("HexCer 18:1;O2/24:0");
+    assertEqual(l->get_lipid_string(), "HexCer 18:1;O2/24:0");
+    assertEqual(l->get_lipid_string(SPECIES), "HexCer 42:1;O2");
     assertEqual(l->get_sum_formula(), "C48H93NO8");
     delete l;
     
     
-    l = parser.parse("GalCer 42:1;O2");
-    assertEqual(l->get_lipid_string(), "GalCer 42:1;O2");
+    l = parser.parse("HexCer 42:1;O2");
+    assertEqual(l->get_lipid_string(), "HexCer 42:1;O2");
     assertEqual(l->get_sum_formula(), "C48H93NO8");
     delete l;
     

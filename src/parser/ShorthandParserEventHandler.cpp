@@ -78,9 +78,9 @@ ShorthandParserEventHandler::ShorthandParserEventHandler() : LipidBaseParserEven
     reg("carbohydrate_number_pre_event", set_carbohydrate_number);
 
     // set head group headgroup_decorators
-    reg("carbohydrate_pre_event", set_carbohydrate);
-    reg("carbohydrate_sulfo_pre_event", set_carbohydrate);
-    reg("carbohydrate_structural_pre_event", set_carbohydrate_structural);
+    reg("carbohydrate_sn_pre_event", set_carbohydrate);
+    reg("carbohydrate_iso_pre_event", set_carbohydrate);
+    reg("carbohydrate_sn_position_pre_event", set_carbohydrate_sn_position);
     reg("carbohydrate_isomeric_pre_event", set_carbohydrate_isomeric);
     
     // fatty acyl events
@@ -280,8 +280,8 @@ void ShorthandParserEventHandler::set_carbohydrate(TreeNode *node){
 
 
 
-void ShorthandParserEventHandler::set_carbohydrate_structural(TreeNode *node){
-    set_lipid_level(STRUCTURE_DEFINED);
+void ShorthandParserEventHandler::set_carbohydrate_sn_position(TreeNode *node){
+    set_lipid_level(SN_POSITION);
     tmp.set_int("func_group_head", 1);
 }
 
