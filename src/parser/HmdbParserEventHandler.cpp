@@ -73,16 +73,14 @@ HmdbParserEventHandler::HmdbParserEventHandler() : LipidBaseParserEventHandler()
     reg("furan_fa_di_pre_event", furan_fa_di);
     reg("furan_first_number_pre_event", furan_fa_first_number);
     reg("furan_second_number_pre_event", furan_fa_second_number);
-    
     reg("adduct_info_pre_event", new_adduct);
     reg("adduct_pre_event", add_adduct);
     reg("charge_pre_event", add_charge);
     reg("charge_sign_pre_event", add_charge_sign);
-        
     reg("fa_lcb_suffix_types_pre_event", register_suffix_type);
     reg("fa_lcb_suffix_position_pre_event", register_suffix_pos);
     reg("fa_synonym_pre_event", register_fa_synonym);
-    
+    debug = "";
 }
 
 
@@ -150,7 +148,7 @@ void HmdbParserEventHandler::add_db_position(TreeNode* node){
 
 
 void HmdbParserEventHandler::add_db_position_number(TreeNode* node){
-    db_position = atoi(node->get_text().c_str());
+    db_position = node->get_int();
 }
 
 
@@ -288,13 +286,13 @@ void HmdbParserEventHandler::add_one_hydroxyl(TreeNode *node) {
     
 
 void HmdbParserEventHandler::add_double_bonds(TreeNode *node) {
-    current_fa->double_bonds->num_double_bonds = atoi(node->get_text().c_str());
+    current_fa->double_bonds->num_double_bonds = node->get_int();
 }
     
     
 
 void HmdbParserEventHandler::add_carbon(TreeNode *node) {
-    current_fa->num_carbon += atoi(node->get_text().c_str());
+    current_fa->num_carbon += node->get_int();
 }
     
 
@@ -333,8 +331,7 @@ void HmdbParserEventHandler::furan_fa_post(TreeNode *node) {
     
     vector<Element> *bridge_chain = new vector<Element>{ELEMENT_O};
     Cycle *cycle = new Cycle(end - start + 1 + bridge_chain->size(), start, end, cyclo_db, cyclo_fg, bridge_chain);
-    current_fa->functional_groups->insert({"cy", vector<FunctionalGroup*>()});
-    current_fa->functional_groups->at("cy").push_back(cycle);
+    current_fa->functional_groups->insert({"cy", {cycle}});
 }
 
 
@@ -352,13 +349,13 @@ void HmdbParserEventHandler::furan_fa_di(TreeNode *node) {
 
 
 void HmdbParserEventHandler::furan_fa_first_number(TreeNode *node) {
-    furan.set_int("len_first", atoi(node->get_text().c_str()));
+    furan.set_int("len_first", node->get_int());
 }
 
 
 
 void HmdbParserEventHandler::furan_fa_second_number(TreeNode *node) {
-    furan.set_int("len_second", atoi(node->get_text().c_str()));
+    furan.set_int("len_second", node->get_int());
     
 }
     
@@ -387,7 +384,7 @@ void HmdbParserEventHandler::add_adduct(TreeNode *node) {
     
 
 void HmdbParserEventHandler::add_charge(TreeNode *node) {
-    adduct->charge = atoi(node->get_text().c_str());
+    adduct->charge = node->get_int();
 }
     
     

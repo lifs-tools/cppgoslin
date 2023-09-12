@@ -54,7 +54,6 @@ LipidBaseParserEventHandler::LipidBaseParserEventHandler() : BaseParserEventHand
     current_fa = NULL;
     adduct = NULL;
     headgroup_decorators = new vector<HeadgroupDecorator*>();
-    adduct = NULL;
     use_head_group = false;
 }
 
