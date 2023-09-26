@@ -89,8 +89,6 @@ int main(int argc, char** argv){
     assertEqual(l->get_sum_formula(), "C42H83NO3");
     delete l;
     
-    
-    
     l = parser.parse("Gal-Cer(1) 18:1(5Z);3OH/24:0");
     assertEqual(l->get_lipid_string(), "Gal-Cer(1) 18:1(5Z);3OH/24:0");
     assertEqual(l->get_lipid_string(STRUCTURE_DEFINED), "Gal-Cer 18:1(5);OH/24:0");
@@ -212,7 +210,6 @@ int main(int argc, char** argv){
     while (getline(infile, line)) data.push_back(line);
     infile.close();
     
-    
     try {
         l = parser.parse("SM 21:1(3Z);2O/12:0");
         assert(false);
@@ -224,6 +221,8 @@ int main(int argc, char** argv){
     
     for (auto &row : data){
         vector<string>* results = split_string(row, ',', '"', true);
+        
+        //cout << results->at(0) << endl;
         for (int i = 0; i < (int)results->size(); ++i) results->at(i) = strip(results->at(i), '"');
         string lipid_name = results->at(0);
         

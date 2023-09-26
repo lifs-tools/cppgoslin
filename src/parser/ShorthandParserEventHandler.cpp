@@ -601,6 +601,7 @@ void ShorthandParserEventHandler::add_alkyl_linkage(TreeNode *node){
 
 void ShorthandParserEventHandler::set_cycle_start(TreeNode *node){
     ((Cycle*)current_fas.back())->start = node->get_int();
+    ((Cycle*)current_fas.back())->position = node->get_int();
 }
 
 

@@ -64,9 +64,8 @@ bool LipidBaseParserEventHandler::check_full_structure(FunctionalGroup *obj){
     bool full = true;
     
     auto* is_fa = dynamic_cast<FattyAcid*>(obj);
-    
     if (is_fa && ((FattyAcid*)obj)->num_carbon == 0) return true;
-    if (is_fa && obj->double_bonds->num_double_bonds > 0) return false;
+    if (is_fa && obj->double_bonds->num_double_bonds > 0 && obj->double_bonds->double_bond_positions.empty()) return false;
     if (is_fa && !obj->double_bonds->double_bond_positions.empty()){
         int sum = 0;
         for (auto &kv : obj->double_bonds->double_bond_positions) sum += kv.second == "E" || kv.second == "Z" || (kv.second == "" && kv.first == ((FattyAcid*)obj)->num_carbon - 1);
@@ -77,7 +76,9 @@ bool LipidBaseParserEventHandler::check_full_structure(FunctionalGroup *obj){
     for (auto &kv : *(obj->functional_groups)){
         for (auto fg : kv.second){
             if (fg->name == "X") continue;
-            if (fg->position < 0) return false;
+            if (fg->position < 0){
+                return false;
+            }
             full &= check_full_structure(fg);
         }
     }
@@ -386,6 +387,16 @@ Headgroup* LipidBaseParserEventHandler::prepare_headgroup_and_checks(){
         delete headgroup;
         headgroup = new Headgroup(head_group, headgroup_decorators, use_head_group);
         poss_fa = contains_val(LipidClasses::get_instance().lipid_classes, headgroup->lipid_class) ? LipidClasses::get_instance().lipid_classes.at(headgroup->lipid_class).possible_num_fa : 0;
+    }
+    
+    // check if all functional groups have a position to be full structure
+    if (is_level(level, COMPLETE_STRUCTURE | FULL_STRUCTURE)){
+        for (auto fa : *fa_list){
+            if (!check_full_structure(fa)){
+                set_lipid_level(STRUCTURE_DEFINED);
+                break;
+            }
+        }
     }
     
     
