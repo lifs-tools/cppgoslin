@@ -211,6 +211,12 @@ void GoslinParserEventHandler::add_mediator_function(TreeNode *node){
         if (mediator_function_positions.size() > 0) functional_group->position = mediator_function_positions[0];
     }
         
+    else if (mediator_function == "NO2"){
+        functional_group = KnownFunctionalGroups::get_functional_group("NO2");
+        fg = "NO2";
+        if (mediator_function_positions.size() > 0) functional_group->position = mediator_function_positions[0];
+    }
+        
     else if (mediator_function == "DH" || mediator_function == "DiH" || mediator_function == "diH"){
         functional_group = KnownFunctionalGroups::get_functional_group("OH");
         fg = "OH";
@@ -231,7 +237,19 @@ void GoslinParserEventHandler::set_trivial_mediator(TreeNode *node){
     head_group = "FA";
     string mediator_name = node->get_text();
      
+    FattyAcid *tmp_fa = current_fa;
     current_fa = resolve_fa_synonym(mediator_name);
+    if (tmp_fa){
+        if (!tmp_fa->functional_groups->empty()){
+            for (auto &kv : *(tmp_fa->functional_groups)){
+                if (uncontains_val_p(current_fa->functional_groups, kv.first)) current_fa->functional_groups->insert({kv.first, vector<FunctionalGroup*>()});
+                for (auto fg : kv.second) current_fa->functional_groups->at(kv.first).push_back(fg);
+            }
+            tmp_fa->functional_groups->clear();
+        }
+        delete tmp_fa;
+    }
+    
     fa_list->clear();
     fa_list->push_back(current_fa);
     mediator_suffix = true;

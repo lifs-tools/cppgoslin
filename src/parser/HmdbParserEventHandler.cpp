@@ -101,6 +101,7 @@ void HmdbParserEventHandler::reset_lipid(TreeNode *node) {
     furan.remove_all();
     headgroup_decorators->clear();
     func_type = "";
+    update_functional_groups.clear();
 }
 
 
@@ -209,6 +210,14 @@ void HmdbParserEventHandler::clean_lcb(TreeNode *node) {
         
 
 void HmdbParserEventHandler::append_fa(TreeNode *node) {
+    if (!update_functional_groups.empty()){
+        for (auto fg : update_functional_groups){
+            fg->position += current_fa->num_carbon;
+        }
+        update_functional_groups.clear();
+    }
+    
+    
     if (current_fa->double_bonds->get_num() < 0){
         throw LipidException("Double bond count does not match with number of double bond positions");
     }
@@ -250,7 +259,8 @@ void HmdbParserEventHandler::add_ether(TreeNode *node) {
 
 void HmdbParserEventHandler::add_methyl(TreeNode *node) {
     FunctionalGroup* functional_group = KnownFunctionalGroups::get_functional_group("Me");
-    functional_group->position = current_fa->num_carbon - (node->get_text() == "i-" ? 1 : 2);
+    functional_group->position = -(node->get_text() == "i-" ? 1 : 2);
+    update_functional_groups.push_back(functional_group);
     current_fa->num_carbon -= 1;
     if (uncontains_val_p(current_fa->functional_groups, "Me")) current_fa->functional_groups->insert({"Me", vector<FunctionalGroup*>()});
     current_fa->functional_groups->at("Me").push_back(functional_group);

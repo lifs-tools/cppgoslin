@@ -67,6 +67,7 @@ public:
     Headgroup* prepare_headgroup_and_checks();
     LipidSpecies *assemble_lipid(Headgroup *headgroup);
     FattyAcid* resolve_fa_synonym(string mediator_name);
+    bool check_full_structure(FunctionalGroup *obj);
 };
 
 
