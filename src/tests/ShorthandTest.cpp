@@ -199,6 +199,31 @@ int main(int argc, char** argv){
     assertEqual(l->get_sum_formula(), "C36H71N2O6P");
     delete l;
     
+    l = parser.parse("SPBP 18:1;O2");
+    assertEqual(l->get_lipid_string(), "SPBP 18:1;O2");
+    assertEqual(l->get_sum_formula(), "C18H38NO5P");
+    delete l;
+        
+    l = parser.parse("LSM 18:1;O2");
+    assertEqual(l->get_lipid_string(), "LSM 18:1;O2");
+    delete l;
+    
+    l = parser.parse("LSM(1) 18:1(5Z);3OH");
+    assertEqual(l->get_lipid_string(), "LSM(1) 18:1(5Z);3OH");
+    delete l;
+    
+    l = parser.parse("LHexCer 18:1;O2");
+    assertEqual(l->get_lipid_string(), "LHexCer 18:1;O2");
+    delete l;
+    
+    l = parser.parse("LHexCer 18:1;O2/0:0");
+    assertEqual(l->get_lipid_string(), "LHexCer 18:1;O2");
+    delete l;
+    
+    l = parser.parse("LHexCer(1) 18:1(5E);3OH/0:0");
+    assertEqual(l->get_lipid_string(), "LHexCer(1) 18:1(5E);3OH");
+    delete l;
+    
     
     // test several more lipid names
     vector<string> data;
