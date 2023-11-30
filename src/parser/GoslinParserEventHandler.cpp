@@ -127,6 +127,7 @@ void GoslinParserEventHandler::reset_lipid(TreeNode *node) {
     headgroup_decorators->clear();
     heavy_element = ELEMENT_C;
     heavy_element_number = 0;
+    trivial_mediator = false;
 }
 
 
@@ -152,6 +153,7 @@ void GoslinParserEventHandler::set_mediator_tetranor(TreeNode *node){
     
 
 void GoslinParserEventHandler::set_mediator_carbon(TreeNode *node){
+    trivial_mediator = true;
     current_fa->num_carbon += GoslinParserEventHandler::mediator_FA.at(node->get_text());
 }
         
@@ -199,7 +201,7 @@ void GoslinParserEventHandler::add_mediator_function(TreeNode *node){
         if (mediator_function_positions.size() > 0) functional_group->position = mediator_function_positions[0];
     }
         
-    else if (mediator_function == "Hp"){
+    else if (mediator_function == "Hp" || mediator_function == "HP"){
         functional_group = KnownFunctionalGroups::get_functional_group("OOH");
         fg = "OOH";
         if (mediator_function_positions.size() > 0) functional_group->position = mediator_function_positions[0];
@@ -393,6 +395,18 @@ void GoslinParserEventHandler::build_lipid(TreeNode *node) {
     }
     
     Headgroup *headgroup = prepare_headgroup_and_checks();
+    
+    
+    string lipid_name = strip(node->get_text(), 1);
+    map<string, vector<int>> &trivial_db = TrivialMediators::get_instance().trivial_mediators;
+    
+    if (trivial_mediator && contains_val(trivial_db, lipid_name)){
+        vector<int> &db_pos = trivial_db[lipid_name];
+        fa_list->at(0)->double_bonds->num_double_bonds = db_pos.size();
+        fa_list->at(0)->double_bonds->double_bond_positions.clear();
+        for (auto p : db_pos) fa_list->at(0)->double_bonds->double_bond_positions.insert({p, ""});
+        level = FULL_STRUCTURE;
+    }
     
     LipidAdduct *lipid = new LipidAdduct();
     lipid->lipid = assemble_lipid(headgroup);
