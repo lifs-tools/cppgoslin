@@ -136,7 +136,7 @@ void GoslinParserEventHandler::set_mediator(TreeNode *node){
     head_group = "FA";
     current_fa = new FattyAcid("FA");
     fa_list->push_back(current_fa);
-    set_lipid_level(STRUCTURE_DEFINED);
+    //set_lipid_level(STRUCTURE_DEFINED);
 }
     
     
@@ -241,6 +241,7 @@ void GoslinParserEventHandler::set_trivial_mediator(TreeNode *node){
      
     FattyAcid *tmp_fa = current_fa;
     current_fa = resolve_fa_synonym(mediator_name);
+    //trivial_mediator = true;
     if (tmp_fa){
         if (!tmp_fa->functional_groups->empty()){
             for (auto &kv : *(tmp_fa->functional_groups)){
