@@ -89,6 +89,7 @@ GoslinParserEventHandler::GoslinParserEventHandler() : LipidBaseParserEventHandl
     reg("mediator_db_pre_event", set_mediator_db);
     reg("mediator_mono_functions_pre_event", set_mediator_function);
     reg("mediator_di_functions_pre_event", set_mediator_function);
+    reg("mediator_tri_functions_pre_event", set_mediator_function);
     reg("mediator_position_pre_event", set_mediator_function_position);
     reg("mediator_functional_group_post_event", add_mediator_function);
     reg("mediator_suffix_pre_event", add_mediator_suffix);
@@ -353,6 +354,7 @@ void GoslinParserEventHandler::set_mediator_function_position(TreeNode *node){
 void GoslinParserEventHandler::add_mediator_function(TreeNode *node){
     set<string> oxos = {"oxo", "Oxo", "OXO", "k", "keto", "K"};
     set<string> dihydro = {"DH", "DiH", "diH", "dihydro"};
+    set<string> trihydro = {"triH", "TriH", "trihydro"};
     
     FunctionalGroup* functional_group = 0;
     string fg = "";
@@ -397,12 +399,33 @@ void GoslinParserEventHandler::add_mediator_function(TreeNode *node){
     else if (contains_val(dihydro, mediator_function)){
         functional_group = KnownFunctionalGroups::get_functional_group("OH");
         fg = "OH";
-        if (mediator_function_positions.size() > 0){
+        if (mediator_function_positions.size() > 1){
             functional_group->position = mediator_function_positions[0];
             FunctionalGroup* functional_group2 = KnownFunctionalGroups::get_functional_group("OH");
             functional_group2->position = mediator_function_positions[1];
-            current_fa->functional_groups->insert({"OH", vector<FunctionalGroup*>()});
+            if (uncontains_val_p(current_fa->functional_groups, fg)) current_fa->functional_groups->insert({"OH", vector<FunctionalGroup*>()});
             current_fa->functional_groups->at("OH").push_back(functional_group2);
+        }
+        else {
+            functional_group->count = 2;
+        }
+    }
+        
+    else if (contains_val(trihydro, mediator_function)){
+        functional_group = KnownFunctionalGroups::get_functional_group("OH");
+        fg = "OH";
+        if (mediator_function_positions.size() > 2){
+            functional_group->position = mediator_function_positions[0];
+            FunctionalGroup* functional_group2 = KnownFunctionalGroups::get_functional_group("OH");
+            functional_group2->position = mediator_function_positions[1];
+            FunctionalGroup* functional_group3 = KnownFunctionalGroups::get_functional_group("OH");
+            functional_group2->position = mediator_function_positions[2];
+            if (uncontains_val_p(current_fa->functional_groups, fg)) current_fa->functional_groups->insert({"OH", vector<FunctionalGroup*>()});
+            current_fa->functional_groups->at("OH").push_back(functional_group2);
+            current_fa->functional_groups->at("OH").push_back(functional_group3);
+        }
+        else {
+            functional_group->count = 3;
         }
     }
     
