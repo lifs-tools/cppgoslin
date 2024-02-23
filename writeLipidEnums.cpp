@@ -156,7 +156,7 @@ void writeLipidEnum(string ofFileName){
         vector<string> *tokens = split_string(line, '\t', '"', true);
         
         if (tokens->size() == 2){
-            trivial_mediators.insert({tokens->at(0), tokens->at(1)});
+            trivial_mediators.insert({to_lower(tokens->at(0)), tokens->at(1)});
         }
         delete tokens;
     }

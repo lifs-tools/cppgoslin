@@ -220,26 +220,30 @@ void GoslinParserEventHandler::add_prostaglandin(TreeNode *node){
 
 
 bool recursive_deletion(string fg_name, FunctionalGroup *fg, map<string, vector<FunctionalGroup*>> *functional_groups){
+    vector<string> del_functions;
+    bool return_value = false;
     for (auto &kv : *functional_groups){
         vector<int> del_fg;
         for (int i = 0; i < (int)kv.second.size(); ++i){
-            cout << kv.second.at(i)->name << " " << kv.second.at(i)->position << " " << fg->name << " " << fg->position << endl;
             if (kv.second.at(i)->position == fg->position) del_fg.push_back(i);
         }
         if (!del_fg.empty()){
             for (int i = (int)del_fg.size() - 1; i >= 0; --i){
                 delete kv.second.at(i);
                 kv.second.erase(kv.second.begin() + i);
+                if (kv.second.empty()) del_functions.push_back(kv.first);
             }
             if (uncontains_val_p(functional_groups, fg_name)) functional_groups->insert({fg_name, vector<FunctionalGroup*>()});
             functional_groups->at(fg_name).push_back(fg);
-            return true;
+            return_value = true;
         }
         for (auto fg_curr : kv.second){
-            if (recursive_deletion(fg_name, fg, fg_curr->functional_groups)) return true;
+            if (return_value) break;
+            if (recursive_deletion(fg_name, fg, fg_curr->functional_groups)) return_value = true;
         }
     }
-    return false;
+    for (auto del_fg_name : del_functions) functional_groups->erase(del_fg_name);
+    return return_value;
 }
         
         
@@ -567,7 +571,7 @@ void GoslinParserEventHandler::build_lipid(TreeNode *node) {
     Headgroup *headgroup = prepare_headgroup_and_checks();
     
     
-    string lipid_name = strip(node->get_text(), 1);
+    string lipid_name = to_lower(strip(node->get_text(), 1));
     map<string, vector<int>> &trivial_db = TrivialMediators::get_instance().trivial_mediators;
     
     if (trivial_mediator && contains_val(trivial_db, lipid_name)){
