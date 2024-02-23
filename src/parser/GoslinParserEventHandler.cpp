@@ -353,7 +353,7 @@ void GoslinParserEventHandler::set_mediator_function_position(TreeNode *node){
     
 void GoslinParserEventHandler::add_mediator_function(TreeNode *node){
     set<string> oxos = {"oxo", "Oxo", "OXO", "k", "keto", "K"};
-    set<string> dihydro = {"DH", "DiH", "diH", "dihydro"};
+    set<string> dihydro = {"dh", "DH", "DiH", "diH", "dihydro"};
     set<string> trihydro = {"triH", "TriH", "trihydro"};
     
     FunctionalGroup* functional_group = 0;
