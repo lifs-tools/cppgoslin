@@ -25,7 +25,7 @@ SOFTWARE.
 
 #include "cppgoslin/parser/LipidBaseParserEventHandler.h"
                
-const map<string, int> LipidBaseParserEventHandler::fa_synonyms{{"Palmitic acid", 0}, {"Linoleic acid", 1}, {"AA", 2}, {"ALA", 3}, {"EPA", 4}, {"DHA", 5}, {"LTB4", 6}, {"Resolvin D3", 7}, {"Maresin 1", 8},  {"Resolvin D2", 9}, {"Resolvin D5", 10}, {"Resolvin D1", 11}, {"TXB1", 12}, {"TXB2", 13}, {"TXB3", 14}, {"PGF2alpha", 15}, {"PGD2", 16}, {"PGE2", 17}, {"PGB2", 18}, {"15d-PGJ2", 19}, {"PGJ2", 20}, {"Arachidonic acid", 21}, {"LA", 22}, {"Mar1", 23}, {"RvD3", 24}, {"PGF1alpha", 25}, {"PDX", 26}, {"Oleic acid", 27}, {"OA", 28}, {"DGLA", 29}, {"iPF2alpha-VI", 30}};
+const map<string, int> LipidBaseParserEventHandler::fa_synonyms{{"Palmitic acid", 0}, {"Linoleic acid", 1}, {"AA", 2}, {"Arachidonic acid", 2}, {"ARA", 2}, {"ALA", 3}, {"EPA", 4}, {"DHA", 5}, {"LTB4", 6}, {"Resolvin D3", 7}, {"Maresin 1", 8},  {"Resolvin D2", 9}, {"Resolvin D5", 10}, {"Resolvin D1", 11}, {"TXB1", 12}, {"TXB2", 13}, {"TXB3", 14}, {"PGF2alpha", 15}, {"PGD2", 16}, {"PGE2", 17}, {"PGB2", 18}, {"15d-PGJ2", 19}, {"PGJ2", 20}, {"LA", 1}, {"Mar1", 23}, {"RvD3", 24}, {"PGF1alpha", 25}, {"PDX", 26}, {"Oleic acid", 27}, {"OA", 28}, {"DGLA", 29}, {"iPF2alpha-VI", 30}};
 
 LipidBaseParserEventHandler::LipidBaseParserEventHandler() : BaseParserEventHandler<LipidAdduct*>() {
     fa_list = new vector<FattyAcid*>();
@@ -88,20 +88,20 @@ bool LipidBaseParserEventHandler::check_full_structure(FunctionalGroup *obj){
 
 FattyAcid* LipidBaseParserEventHandler::resolve_fa_synonym(string mediator_name){
     
-    if (uncontains_val(fa_synonyms, mediator_name)) return 0;
+    if (uncontains_val(fa_synonyms, mediator_name)){
+        throw UnsupportedLipidException(mediator_name);
+    }
     
     switch(LipidBaseParserEventHandler::fa_synonyms.at(mediator_name)){
         case 0: // Palmitic acid
             return new FattyAcid("FA", 16);
             break;
             
-        case 1: // Linoleic acid
-        case 22: //LA
+        case 1: // Linoleic acid, LA
             return new FattyAcid("FA", 18, new DoubleBonds({{9, "Z"}, {12, "Z"}}));
             break;
             
-        case 2: // AA":
-        case 21: // Arachidonic acid
+        case 2: // AA, Arachidonic acid, ARA
             return new FattyAcid("FA", 20, new DoubleBonds({{5, "Z"}, {8, "Z"}, {11, "Z"}, {14, "Z"}}));
             break;
             
@@ -350,7 +350,7 @@ FattyAcid* LipidBaseParserEventHandler::resolve_fa_synonym(string mediator_name)
             break;
     }
     
-    return 0;
+    throw UnsupportedLipidException(mediator_name);
 }
 
 
