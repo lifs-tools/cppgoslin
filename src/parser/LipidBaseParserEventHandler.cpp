@@ -389,7 +389,6 @@ Headgroup* LipidBaseParserEventHandler::prepare_headgroup_and_checks(bool allow_
             poss_fa = contains_val(LipidClasses::get_instance().lipid_classes, headgroup->lipid_class) ? LipidClasses::get_instance().lipid_classes.at(headgroup->lipid_class).possible_num_fa : 0;
         }
     }
-    
     // check if all functional groups have a position to be full structure
     if (is_level(level, COMPLETE_STRUCTURE | FULL_STRUCTURE)){
         for (auto fa : *fa_list){
@@ -399,7 +398,6 @@ Headgroup* LipidBaseParserEventHandler::prepare_headgroup_and_checks(bool allow_
             }
         }
     }
-    
     
     if (level == SPECIES){
         if (true_fa == 0 && poss_fa != 0){
