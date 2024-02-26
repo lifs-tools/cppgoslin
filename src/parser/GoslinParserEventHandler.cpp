@@ -143,13 +143,12 @@ void GoslinParserEventHandler::reset_lipid(TreeNode *node) {
         
         
 void GoslinParserEventHandler::add_prostaglandin(TreeNode *node){
-    set<string> pg_types = {"B", "D", "E", "F", "J"};
+    set<string> pg_types = {"B", "D", "E", "F", "J", "K"};
     set<string> pg_numbers = {"1", "2", "3"};
     if (uncontains_val(pg_types, prostaglandin_type) || uncontains_val(pg_numbers, prostaglandin_number)) return;
     
     DoubleBonds *db = nullptr;
     FattyAcid *tmp_fa = current_fa;
-    
     
     if (prostaglandin_number == "1") db = new DoubleBonds({{13, "E"}});
     else if (prostaglandin_number == "2") db = new DoubleBonds({{5, "Z"}, {13, "E"}});
@@ -163,7 +162,6 @@ void GoslinParserEventHandler::add_prostaglandin(TreeNode *node){
         Cycle* cy = new Cycle(5, 8, 12, new DoubleBonds({{8, ""}}), new map<string, vector<FunctionalGroup*>>{{"OH", {f2}}});
         current_fa = new FattyAcid("FA", 20, db, new map<string, vector<FunctionalGroup*>>{{"OH", {f1}}, {"cy", {cy}}});
     }
-        
     else if (prostaglandin_type == "D"){
         FunctionalGroup *f1 = KnownFunctionalGroups::get_functional_group("OH");
         FunctionalGroup *f2 = KnownFunctionalGroups::get_functional_group("OH");
@@ -184,7 +182,6 @@ void GoslinParserEventHandler::add_prostaglandin(TreeNode *node){
         Cycle* cy = new Cycle(5, 8, 12, 0, new map<string, vector<FunctionalGroup*>>{{"OH", {f3}}, {"oxy", {f2}}});
         current_fa = new FattyAcid("FA", 20, db, new map<string, vector<FunctionalGroup*>>{{"OH", {f1}}, {"cy", {cy}}});
     }
-        
     else if (prostaglandin_type == "F"){
         FunctionalGroup *f1 = KnownFunctionalGroups::get_functional_group("OH");
         FunctionalGroup *f2 = KnownFunctionalGroups::get_functional_group("OH");
@@ -195,14 +192,22 @@ void GoslinParserEventHandler::add_prostaglandin(TreeNode *node){
         Cycle* cy = new Cycle(5, 8, 12, 0, new map<string, vector<FunctionalGroup*>>{{"OH", {f2, f3}}});
         current_fa = new FattyAcid("FA", 20, db, new map<string, vector<FunctionalGroup*>>{{"OH", {f1}}, {"cy", {cy}}});
     }
-    
-    
     else if (prostaglandin_type == "J"){
         FunctionalGroup *f1 = KnownFunctionalGroups::get_functional_group("OH");
         FunctionalGroup *f2 = KnownFunctionalGroups::get_functional_group("oxo");
         f1->position = 15;
         f2->position = 11;
         Cycle* cy = new Cycle(5, 8, 12, new DoubleBonds({{9, ""}}), new map<string, vector<FunctionalGroup*>>{{"oxo", {f2}}});
+        current_fa = new FattyAcid("FA", 20, db, new map<string, vector<FunctionalGroup*>>{{"OH", {f1}}, {"cy", {cy}}});
+    }
+    else if (prostaglandin_type == "K"){
+        FunctionalGroup *f1 = KnownFunctionalGroups::get_functional_group("OH");
+        FunctionalGroup *f2 = KnownFunctionalGroups::get_functional_group("oxo");
+        FunctionalGroup *f3 = KnownFunctionalGroups::get_functional_group("oxo");
+        f1->position = 15;
+        f2->position = 9;
+        f3->position = 11;
+        Cycle* cy = new Cycle(5, 8, 12, 0, new map<string, vector<FunctionalGroup*>>{{"oxo", {f2, f3}}});
         current_fa = new FattyAcid("FA", 20, db, new map<string, vector<FunctionalGroup*>>{{"OH", {f1}}, {"cy", {cy}}});
     }
     else {
