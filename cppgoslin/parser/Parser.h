@@ -34,7 +34,6 @@ SOFTWARE.
 #include "cppgoslin/domain/Element.h"
 #include "cppgoslin/parser/KnownGrammars.h"
 #include <cstdint>
-#include <string>
 #include <set>
 #include <map>
 #include <vector>
