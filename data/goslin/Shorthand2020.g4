@@ -234,11 +234,11 @@ acer_med : med;
 /* sterol lipids */
 sterol : st | st_ester;
 st : st_hg headgroup_separator sterol_definition;
-st_ester : st_hg_ester headgroup_separator sterol_definition sorted_fa_separator fatty_acyl_chain | st_hg_ester headgroup_separator fatty_acyl_chain;
-sterol_definition : fatty_acyl_chain;
-st_hg : 'ST' | 'BA' | 'FC' | 'SG' | 'ASG';
+st_ester : st_hg_ester headgroup_separator sterol_ester_definition sorted_fa_separator fatty_acyl_chain | st_hg_ester headgroup_separator fatty_acyl_chain;
+sterol_definition : '27:1;O' | '27:2;O' | '28:2;O' | '28:3;O' | '29:2;O' | '30:2;O' | '28:1;O' | '29:1;O' | '27:0;O;S' | '27:1;O;S' | '28:1;O;S' | '28:2;O;S' | '29:1;O;S' | '27:1;O;Hex' | '28:1;O;Hex' | '28:2;O;Hex';
+sterol_ester_definition : '27:1' | '27:2' | '28:1' | '28:2' | '28:3' | '29:1' | '29:2' | '30:2';
+st_hg : 'ST'; // | 'BA' | 'FC' | 'SG' | 'ASG';
 st_hg_ester : 'SE' | 'CE';
-
 
 
 /* separators */

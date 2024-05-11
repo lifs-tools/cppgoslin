@@ -283,6 +283,7 @@ RESORCINOL,PK,Alkyl resorcinols and derivatives [PK1503],2,2,,,,,,,,,,
 SB1a,SP,Sulfoglycosphingolipids (sulfatides) [SP0602],2,2,,C26H42NO26S2,,,,,,,,
 SE 27:1,ST,Sterol esters [ST0102],1,1,Ester,C27H45O,ChE,CE,Cholesteryl ester,Cholesterol ester,SE,Sterol ester,ChoE,CholE
 SE 27:2,ST,Sterol esters [ST0102],1,1,Ester,C27H43O,Desmosterol ester,,,,,,,
+SE 28:1,ST,Sterol esters [ST0102],1,1,Ester,C28H47O,Campesterol ester,,,,,,,
 SE 28:2,ST,Sterol esters [ST0102],1,1,Ester,C28H45O,Ergostadienol ester,,,,,,,
 SE 28:3,ST,Sterol esters [ST0102],1,1,Ester,C28H43O,Ergosterol ester,,,,,,,
 SE 29:1,ST,Sterol esters [ST0102],1,1,Ester,C29H49O,,,,,,,,
