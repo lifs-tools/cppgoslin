@@ -36,7 +36,6 @@ SOFTWARE.
 #include <fstream>
 #include <sstream>
 #include <algorithm>
-#include <iterator>
 
 
 using namespace std;
@@ -112,7 +111,7 @@ public:
     uint64_t size();
     
 private:
-    class iter : public std::iterator<std::output_iterator_tag, int>{
+    class iter {
         public:
             explicit iter(Bitfield& _bitfield, uint64_t index = 0);
             int operator*();

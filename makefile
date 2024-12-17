@@ -34,7 +34,7 @@ ifeq ($(OS),Windows_NT)
   flags = -fopenmp
 endif
 
-opt = -std=c++11 -O3 ${flags} -D_FORTIFY_SOURCE=2
+opt = -std=c++17 -O3 ${flags} -D_FORTIFY_SOURCE=2
 # -Wvla -Wall ${MARCH}
 
 main: ${bin}

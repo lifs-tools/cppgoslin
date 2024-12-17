@@ -179,7 +179,7 @@ void GoslinParserEventHandler::add_prostaglandin(TreeNode *node){
         f1->position = 15;
         f2->position = 9;
         f3->position = 11;
-        Cycle* cy = new Cycle(5, 8, 12, 0, new map<string, vector<FunctionalGroup*>>{{"OH", {f3}}, {"oxy", {f2}}});
+        Cycle* cy = new Cycle(5, 8, 12, 0, new map<string, vector<FunctionalGroup*>>{{"OH", {f3}}, {"oxo", {f2}}});
         current_fa = new FattyAcid("FA", 20, db, new map<string, vector<FunctionalGroup*>>{{"OH", {f1}}, {"cy", {cy}}});
     }
     else if (prostaglandin_type == "F"){
@@ -597,7 +597,6 @@ void GoslinParserEventHandler::build_lipid(TreeNode *node) {
     }
     
     Headgroup *headgroup = prepare_headgroup_and_checks();
-    
     
     string lipid_name = to_lower(strip(node->get_text(), 1));
     map<string, vector<int>> &trivial_db = TrivialMediators::get_instance().trivial_mediators;
