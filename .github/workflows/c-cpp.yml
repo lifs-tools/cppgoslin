@@ -17,7 +17,7 @@ jobs:
         - { name: "Ubuntu Latest GCC", artifact: "Linux.tar.xz", os: ubuntu-latest, build_type: "Release", cc: "gcc", cxx: "g++" }
         - { name: "macOS arm64 Clang", artifact: "macOS-arm64-clang.tar.xz", os: macos-latest, build_type: "Release", cc: "clang", cxx: "clang++" }
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: show platform
       run: uname -sm
     - name: make clean
