@@ -2,10 +2,28 @@ ifeq ($(OS),Windows_NT)
     bin_grammar = ".\writeGrammarsHeader.exe"
 	bin_enums = ".\writeLipidEnums.exe"
 	bin = libcppGoslin.dll
+	SHARED_FLAG = -shared
+	BSTATIC_FLAG =
+	RPATH_FLAG =
+	LIBPATH_ENV =
 else
     bin_grammar = "./writeGrammarsHeader"
 	bin_enums = "./writeLipidEnums"
-	bin = libcppGoslin.so
+	UNAME_S := $(shell uname -s)
+	UNAME_M := $(shell uname -m)
+	ifeq ($(UNAME_S),Darwin)
+		bin = libcppGoslin.dylib
+		SHARED_FLAG = -dynamiclib
+		BSTATIC_FLAG =
+		RPATH_FLAG = -Wl,-rpath,.
+		LIBPATH_ENV = DYLD_LIBRARY_PATH=.:$(DYLD_LIBRARY_PATH)
+	else
+		bin = libcppGoslin.so
+		SHARED_FLAG = -shared
+		BSTATIC_FLAG = -Bstatic
+		RPATH_FLAG = -Wl,-rpath,.
+		LIBPATH_ENV = LD_LIBRARY_PATH=.:$(LD_LIBRARY_PATH)
+	endif
 endif
 install_dir = /usr
 ifeq ($(origin CC),default)
@@ -34,13 +52,19 @@ ifeq ($(OS),Windows_NT)
   flags = -fopenmp
 endif
 
+# On macOS, g++ is an alias for Apple Clang which does not ship with OpenMP.
+# Override any -fopenmp that the GCC branch may have set above.
+ifeq ($(UNAME_S),Darwin)
+  flags = -fstack-protector-strong
+endif
+
 opt = -std=c++17 -O3 ${flags} -D_FORTIFY_SOURCE=2
 # -Wvla -Wall ${MARCH}
 
 main: ${bin}
 
 ${bin}:	cppgoslin/parser/KnownGrammars.h src/domain/LipidClasses.cpp cppgoslin/domain/ClassesEnum.h ${obj}
-	${CC} -shared ${obj} -o ${bin}
+	${CC} ${SHARED_FLAG} ${obj} -o ${bin}
 	
 	
 static: cppgoslin/parser/KnownGrammars.h src/domain/LipidClasses.cpp ${obj}
@@ -67,7 +91,7 @@ src/parser/%.o: src/parser/%.cpp cppgoslin/parser/KnownGrammars.h src/domain/Lip
 	${CC} ${opt} -I. -fPIC -o $@ -c $<
 	
 	
-src/tests/%.o: src/tests/%.cpp libcppGoslin.so
+src/tests/%.o: src/tests/%.cpp ${bin}
 	${CC} ${opt} -I. -fPIC -o $@ -c $<
 	
 clean-win:
@@ -99,43 +123,43 @@ install: ${bin}
 	
 	
 ShorthandTest: src/tests/ShorthandTest.o
-	${CC} -I. ${opt} -Bstatic -o ShorthandTest src/tests/ShorthandTest.o libcppGoslin.so
+	${CC} -I. ${opt} ${BSTATIC_FLAG} ${RPATH_FLAG} -o ShorthandTest src/tests/ShorthandTest.o ${bin}
 
 ParserTest: src/tests/ParserTest.o
-	${CC} -I. ${opt} -Bstatic -o ParserTest src/tests/ParserTest.o libcppGoslin.so
+	${CC} -I. ${opt} ${BSTATIC_FLAG} ${RPATH_FLAG} -o ParserTest src/tests/ParserTest.o ${bin}
 
 SumFormulaTest: src/tests/SumFormulaTest.o
-	${CC} -I. ${opt} -Bstatic -o SumFormulaTest src/tests/SumFormulaTest.o libcppGoslin.so
+	${CC} -I. ${opt} ${BSTATIC_FLAG} ${RPATH_FLAG} -o SumFormulaTest src/tests/SumFormulaTest.o ${bin}
 
 MassesTest: src/tests/MassesTest.o
-	${CC} -I. ${opt} -Bstatic -o MassesTest src/tests/MassesTest.o libcppGoslin.so
+	${CC} -I. ${opt} ${BSTATIC_FLAG} ${RPATH_FLAG} -o MassesTest src/tests/MassesTest.o ${bin}
 	
 LipidMapsTest: src/tests/LipidMapsTest.o
-	${CC} -I. ${opt} -Bstatic -o LipidMapsTest src/tests/LipidMapsTest.o libcppGoslin.so
+	${CC} -I. ${opt} ${BSTATIC_FLAG} ${RPATH_FLAG} -o LipidMapsTest src/tests/LipidMapsTest.o ${bin}
 	
 GoslinTest: src/tests/GoslinTest.o
-	${CC} -I. ${opt} -Bstatic -o GoslinTest src/tests/GoslinTest.o libcppGoslin.so
+	${CC} -I. ${opt} ${BSTATIC_FLAG} ${RPATH_FLAG} -o GoslinTest src/tests/GoslinTest.o ${bin}
 	
 SwissLipidsTest: src/tests/SwissLipidsTest.o
-	${CC} -I. ${opt} -Bstatic -o SwissLipidsTest src/tests/SwissLipidsTest.o libcppGoslin.so
+	${CC} -I. ${opt} ${BSTATIC_FLAG} ${RPATH_FLAG} -o SwissLipidsTest src/tests/SwissLipidsTest.o ${bin}
 	
 HmdbTest: src/tests/HmdbTest.o
-	${CC} -I. ${opt} -Bstatic -o HmdbTest src/tests/HmdbTest.o libcppGoslin.so
+	${CC} -I. ${opt} ${BSTATIC_FLAG} ${RPATH_FLAG} -o HmdbTest src/tests/HmdbTest.o ${bin}
 	
 FattyAcidsTest: src/tests/FattyAcidsTest.o
-	${CC} -I. ${opt} -Bstatic -o FattyAcidsTest src/tests/FattyAcidsTest.o libcppGoslin.so
+	${CC} -I. ${opt} ${BSTATIC_FLAG} ${RPATH_FLAG} -o FattyAcidsTest src/tests/FattyAcidsTest.o ${bin}
 	
 	
 test: FattyAcidsTest ShorthandTest ParserTest SumFormulaTest MassesTest GoslinTest LipidMapsTest SwissLipidsTest HmdbTest
 
 	
 runtests: FattyAcidsTest ShorthandTest ParserTest SumFormulaTest MassesTest GoslinTest LipidMapsTest SwissLipidsTest HmdbTest
-	LD_LIBRARY_PATH=.:${LD_LIBRARY_PATH} ./FattyAcidsTest
-	LD_LIBRARY_PATH=.:${LD_LIBRARY_PATH} ./ShorthandTest
-	LD_LIBRARY_PATH=.:${LD_LIBRARY_PATH} ./ParserTest
-	LD_LIBRARY_PATH=.:${LD_LIBRARY_PATH} ./SumFormulaTest
-	LD_LIBRARY_PATH=.:${LD_LIBRARY_PATH} ./MassesTest
-	LD_LIBRARY_PATH=.:${LD_LIBRARY_PATH} ./GoslinTest
-	LD_LIBRARY_PATH=.:${LD_LIBRARY_PATH} ./LipidMapsTest
-	LD_LIBRARY_PATH=.:${LD_LIBRARY_PATH} ./SwissLipidsTest
-	LD_LIBRARY_PATH=.:${LD_LIBRARY_PATH} ./HmdbTest
+	${LIBPATH_ENV} ./FattyAcidsTest
+	${LIBPATH_ENV} ./ShorthandTest
+	${LIBPATH_ENV} ./ParserTest
+	${LIBPATH_ENV} ./SumFormulaTest
+	${LIBPATH_ENV} ./MassesTest
+	${LIBPATH_ENV} ./GoslinTest
+	${LIBPATH_ENV} ./LipidMapsTest
+	${LIBPATH_ENV} ./SwissLipidsTest
+	${LIBPATH_ENV} ./HmdbTest

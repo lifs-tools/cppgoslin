@@ -1,8 +1,8 @@
 CC = g++
-opt = -O3 -std=c++11 -Wall
-dopt = -O0 -std=c++11 -Wall -g -rdynamic
-inc = -I /usr/include -I ../.
-lib_dir = -L /usr/lib -L ../.
+opt = -O3 -std=c++17 -Wall
+dopt = -O0 -std=c++17 -Wall -g
+inc = -I ../.
+lib_dir = -L ../.
 libs = -l cppGoslin
 
 main: lipid_name_parser.cpp simple_statistics.cpp

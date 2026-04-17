@@ -15,15 +15,16 @@ jobs:
       matrix:
         config:
         - { name: "Ubuntu Latest GCC", artifact: "Linux.tar.xz", os: ubuntu-latest, build_type: "Release", cc: "gcc", cxx: "g++" }
-          #        - { name: "macOS Latest Clang", artifact: "macOS.tar.xz", os: macos-latest, build_type: "Release", cc: "clang", cxx: "clang++" }
-        - { name: "MacOS Latest Clang", artifact: "MacOS-clang.tar.xz", os: macos-latest, build_type: "Release", cc: "clang", cxx: "clang++" }
+        - { name: "macOS arm64 Clang", artifact: "macOS-arm64-clang.tar.xz", os: macos-latest, build_type: "Release", cc: "clang", cxx: "clang++" }
     steps:
-    - uses: actions/checkout@v2
-    - name: make
+    - uses: actions/checkout@v4
+    - name: show platform
+      run: uname -sm
+    - name: make clean
       run: make CC=${{ matrix.config.cxx }} clean
-    - name: make 
+    - name: make
       run: make CC=${{ matrix.config.cxx }}
     - name: make test
       run: make CC=${{ matrix.config.cxx }} test
-    - name: make runtest
+    - name: make runtests
       run: make runtests
